@@ -113,7 +113,12 @@
       'button[type="submit"], input[type="submit"], button:not([type])'
     );
     var host = makeHost('cf-turnstile-host');
-    if (submit && submit.parentNode) {
+    // Prefer a slot that stays visible: on the account application the action
+    // bar is hidden on the last step, so the widget goes *before* it.
+    var actions = form.querySelector('.form-actions');
+    if (actions && actions.parentNode) {
+      actions.parentNode.insertBefore(host, actions);
+    } else if (submit && submit.parentNode) {
       submit.parentNode.insertBefore(host, submit);
     } else {
       form.appendChild(host);
@@ -215,14 +220,6 @@
 
   function attachStandalone() {
     var host = document.querySelector('[data-cf-turnstile-standalone]');
-
-    // Pages rendered by Angular can have their static markup stripped during
-    // hydration, and some pages have no form at all. In that case build the
-    // card ourselves and append it to the document body.
-    if (!host && document.querySelectorAll('form').length === 0) {
-      host = buildStandaloneCard();
-      document.body.appendChild(host);
-    }
     if (!host) return;
 
     var inner = host.querySelector('.cf-turnstile-host');
@@ -232,15 +229,24 @@
     }
     if (inner.getAttribute('data-rendered') === '1') return;
 
-    var token = '';
     renderWidget(inner, function (t) {
-      token = t || '';
       var msg = host.querySelector('.cf-turnstile-msg');
       if (msg) {
-        msg.textContent = token ? 'Verification complete.' : '';
-        msg.classList.toggle('cf-turnstile-msg--error', !token);
+        msg.textContent = t ? 'Verification complete.' : '';
+        msg.classList.toggle('cf-turnstile-msg--error', !t);
       }
     });
+  }
+
+  // Pages with no form at all (the dashboard) get a standalone card.
+  // The check is deferred so that forms rendered by Angular are counted first.
+  function createStandaloneIfNoForm() {
+    if (document.querySelector('[data-cf-turnstile-standalone]')) { attachStandalone(); return; }
+    if (document.querySelectorAll('form').length > 0) return;
+
+    var card = buildStandaloneCard();
+    document.body.appendChild(card);
+    attachStandalone();
   }
 
   /* ------------------------------------------------------------ bootstrap */
@@ -260,6 +266,13 @@
     document.head.appendChild(meta);
   }
 
+  // Angular's hydration can remove head elements it does not recognise.
+  // Re-assert them whenever the DOM changes.
+  function ensureHead() {
+    ensureStyles();
+    ensureMeta();
+  }
+
   function scan() {
     var forms = findForms(document);
     for (var i = 0; i < forms.length; i++) attachForm(forms[i]);
@@ -267,8 +280,8 @@
   }
 
   function init() {
-    ensureStyles();
-    ensureMeta();
+    ensureHead();
+    window.__turnstileBooted = true;
 
     // Intercept at the document level in the capture phase so we get the
     // event before Angular's own (ng)submit handler.
@@ -285,10 +298,15 @@
             for (var k = 0; k < forms.length; k++) attachForm(forms[k]);
           }
         }
+        ensureHead();
         attachStandalone();
       });
       observer.observe(document.documentElement, { childList: true, subtree: true });
     }
+
+    // Give the app a moment to render any form before deciding that the
+    // page has no form and needs a standalone card.
+    setTimeout(createStandaloneIfNoForm, 1500);
   }
 
   if (document.readyState === 'loading') {
