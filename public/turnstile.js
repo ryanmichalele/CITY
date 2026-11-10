@@ -26,7 +26,6 @@
 
   var apiPromise = null;
   var states = new WeakMap(); // form -> state
-  var standaloneDone = false;
 
   function siteKey() {
     var meta = document.querySelector('meta[name="cf-turnstile-site-key"]');
@@ -202,17 +201,36 @@
   }
 
   /* ---------------------------------------------------------- standalone -- */
+  function buildStandaloneCard() {
+    var card = document.createElement('div');
+    card.className = 'cf-turnstile-standalone';
+    card.setAttribute('data-cf-turnstile-standalone', '');
+    card.innerHTML =
+      '<h2>Verify you are human</h2>' +
+      '<p>Complete this check to confirm you are not a robot.</p>' +
+      '<div class="cf-turnstile-host"></div>' +
+      '<p class="cf-turnstile-msg" role="status" aria-live="polite"></p>';
+    return card;
+  }
+
   function attachStandalone() {
-    if (standaloneDone) return;
     var host = document.querySelector('[data-cf-turnstile-standalone]');
+
+    // Pages rendered by Angular can have their static markup stripped during
+    // hydration, and some pages have no form at all. In that case build the
+    // card ourselves and append it to the document body.
+    if (!host && document.querySelectorAll('form').length === 0) {
+      host = buildStandaloneCard();
+      document.body.appendChild(host);
+    }
     if (!host) return;
-    standaloneDone = true;
 
     var inner = host.querySelector('.cf-turnstile-host');
     if (!inner) {
       inner = makeHost('cf-turnstile-host');
       host.appendChild(inner);
     }
+    if (inner.getAttribute('data-rendered') === '1') return;
 
     var token = '';
     renderWidget(inner, function (t) {
@@ -225,7 +243,23 @@
     });
   }
 
-  /* ------------------------------------------------------------- bootstrap */
+  /* ------------------------------------------------------------ bootstrap */
+  function ensureStyles() {
+    if (document.querySelector('link[href*="turnstile.css"]')) return;
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/turnstile.css';
+    document.head.appendChild(link);
+  }
+
+  function ensureMeta() {
+    if (document.querySelector('meta[name="cf-turnstile-site-key"]')) return;
+    var meta = document.createElement('meta');
+    meta.setAttribute('name', 'cf-turnstile-site-key');
+    meta.setAttribute('content', siteKey());
+    document.head.appendChild(meta);
+  }
+
   function scan() {
     var forms = findForms(document);
     for (var i = 0; i < forms.length; i++) attachForm(forms[i]);
@@ -233,6 +267,9 @@
   }
 
   function init() {
+    ensureStyles();
+    ensureMeta();
+
     // Intercept at the document level in the capture phase so we get the
     // event before Angular's own (ng)submit handler.
     document.addEventListener('submit', onSubmit, true);
