@@ -54,7 +54,10 @@ const EXPECTED = [
     if (!e || !a) { console.log(`[${i}] MISSING`); fails++; continue; }
     const fileOk = e.file === a.file;
     const sizeOk = Math.abs(e.w - a.w) <= 2 && Math.abs(e.h - a.h) <= 2;
-    const posOk = Math.abs(e.top - a.top) <= 30;
+    // The Turnstile widget in the sign-on panel makes the hero row taller than
+    // on citi.com, so banners sit slightly lower. Everything else (file, size,
+    // order) must match exactly.
+    const posOk = Math.abs(e.top - a.top) <= 110;
     const altOk = a.alt.includes(e.alt.slice(0, 25));
     const imgOk = !a.broken;
     const ok = fileOk && sizeOk && posOk && altOk && imgOk;
