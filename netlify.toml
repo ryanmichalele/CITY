@@ -1,6 +1,9 @@
 [build]
   publish = "public"
 
+[functions]
+  directory = "netlify/functions"
+
 # SPA fallback: Netlify serves existing static files directly and only rewrites
 # unmatched client-side routes to index.html, so refreshing a nested route
 # never produces a 404.

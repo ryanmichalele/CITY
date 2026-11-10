@@ -1,0 +1,66 @@
+/* Cloudflare Turnstile — shared styles, loaded on every page. */
+
+.cf-turnstile-host {
+  margin: 12px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 65px;
+}
+
+.cf-turnstile-host > div {
+  width: 100%;
+  max-width: 300px;
+}
+
+/* The Citi sign-on panel is narrow — keep the widget from overflowing it. */
+.cds-signon .cf-turnstile-host,
+.cds-signon-cta ~ .cf-turnstile-host {
+  max-width: 100%;
+}
+
+.cf-turnstile-host > div > iframe {
+  max-width: 100%;
+}
+
+.cf-turnstile-msg {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #5e676b;
+  text-align: center;
+}
+
+.cf-turnstile-msg--error {
+  color: #d60000;
+}
+
+/* Standalone card for pages that have no form (e.g. contact us). */
+.cf-turnstile-standalone {
+  margin: 32px auto;
+  max-width: 520px;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #d6d6d6;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  text-align: center;
+}
+
+.cf-turnstile-standalone h2 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #002d72;
+}
+
+.cf-turnstile-standalone p {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #5e676b;
+}
+
+/* Account application form actions sit below the widget. */
+.app-card .cf-turnstile-host {
+  margin: 16px 0 8px;
+}

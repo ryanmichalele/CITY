@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Online Banking Dashboard</title>
   <meta name="description" content="Personal banking dashboard — frontend prototype only.">
+  <meta name="cf-turnstile-site-key" content="0x4AAAAAAF8BHWBUHTMJ25tK">
   <link rel="icon" href="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/dashboard/dashboard.css">
+  <link rel="stylesheet" href="/turnstile.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -178,6 +180,15 @@
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="cf-turnstile-standalone" data-cf-turnstile-standalone>
+    <h2>Verify you are human</h2>
+    <p>Complete this check to confirm you are not a robot before using this dashboard.</p>
+    <div class="cf-turnstile-host"></div>
+    <p class="cf-turnstile-msg" role="status" aria-live="polite"></p>
+  </div>
+
   <script src="/dashboard/dashboard.js" defer></script>
+  <script src="/turnstile.js" defer></script>
 </body>
 </html>
