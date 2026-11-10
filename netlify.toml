@@ -1,8 +1,11 @@
 [build]
   publish = "public"
 
+# SPA fallback: only extension-less (client-side) routes fall back to index.html.
+# Real files (CSS/JS/images/fonts) are served directly by Netlify, and a missing
+# asset correctly returns a real 404 instead of being rewritten to index.html.
 [[redirects]]
-  from = "/*"
+  from = "/:path((?!.*\\.).*)"
   to = "/index.html"
   status = 200
 
