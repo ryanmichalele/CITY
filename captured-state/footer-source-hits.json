@@ -1,0 +1,36 @@
+[
+  {
+    "url": "https://www.citi.com/",
+    "status": 200,
+    "ct": "text/html; charset=utf-8",
+    "len": 276543,
+    "found": [
+      "The products, account packages",
+      "International Personal Bank"
+    ],
+    "sample": " laws, rules, and regulations that govern or affect your application for and use of our accounts, products and services, including laws and regulations regarding taxes, exchange and\\u002For capital controls that you are responsible for following.\\u003C\\u002Fp>\\n\\u003Cp>&nbsp;\\u003C\\u002Fp>\\n\\u003Cp>The products, account packages, promotional offers and services described in this website may not apply to customers of \\u003Ca href=\\\"https:\\u002F\\u002Fonline.citi.com\\u002FJRS\\u002Fportal\\u002Ftemplate.do?ID=international-personal-bank&amp;l=en&amp;locale=en_US\\\" target=\\\"_blank\\\">International Personal Bank U.S.\\u003C\\u002Fa>&nbsp;in the Citigold\\u003Csup>®\\u003C\\u002Fsup> Private Client International, Citigold\\u003Csup>®\\u003C\\u002Fsup> International, Citi International Personal, Citi Global Executive Preferred, and Citi Global Executive Account Packages.\\u003Cbr>\\n\\u003C\\u002Fp>\\n\"}}},\"qrcode\":{\"items\":[{\"id\":\"smallDesktop\",\"title\":\"Scan This Code to Sign On\",\"titleNote\":{\"html\":\"\\u003C"
+  },
+  {
+    "url": "https://www.citi.com/cbol-hp-static-assets/chunk-GDRUDWCJ.js",
+    "status": 200,
+    "ct": "text/javascript; charset=utf-8",
+    "len": 3001038,
+    "found": [
+      "Equal Housing Lender",
+      "The products, account packages",
+      "International Personal Bank"
+    ],
+    "sample": "ngMap(e)}onRightClick(e,n,i,r,s){(n.type==\"contextmenu\"||n.type==\"mouseover\")&&(n.type===\"contextmenu\"&&this.brandingTag.footerNavigationTagging(s,i,r.title,e.title),this.mapperService.modifyURLPrefixRightClick(n,e.domainMap,e))}taggingEqualHousing(){this.brandingTag.footerNavigationTagging(5,0,\"\",\"Equal Housing Lender\")}set brandingConfig(e){e&&this.setNavigationConfig(e)}showSecondModal(e){e?(this.showJDPowerModal[0]=!1,this.showJDPowerModal[1]=!1):(this.showJDPowerModal[0]=!1,this.showJDPowerModal[1]=!0)}toggleSearchPanel(e,n,i,r){this.brandingTag.footerNavigationTagging(r,n,i.title,e.title);let s=this.layoutsService.toggleSearchPanel.getValue();this.layoutsService.toggleSearchPanel.next(!s),s||this._window.scrollTo(0,0)}static{this.\\u0275fac=function(n){return new(n||t)(P(dn),P(ft),P(Hp),P(ze),P(_t),P(sl),P(Iu),P(od),P(id),P(js,8))}}static{this.\\u0275cmp=xe({type:t,selectors:[[\"citi-footer-navigation\"]],viewQuery:function(n,i){if(n&1&&et(vme,5)(bme,5),n&2){let r;ue(r=he())&&(i.loca"
+  },
+  {
+    "url": "https://aemapi.citi.com/graphql/execute.json/global-nav/get-gn-footer%3Bpath=/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/footer-cont",
+    "status": 200,
+    "ct": "application/json",
+    "len": 44703,
+    "found": [
+      "NMLS 412915",
+      "Equal Housing Lender"
+    ],
+    "sample": "ation for and use of our accounts, products and services, including laws regarding taxes, exchange and/or capital controls that you are responsible for following.&lt;/p&gt;&lt;p lang=&quot;en&quot;&gt;Deposit and lending products are provided by Citibank, N.A., Member FDIC and Equal Housing Lender. NMLS 412915.&nbsp; Citibank, N.A. is not responsible for the obligations of its affiliates.&lt;/p&gt;</p>\\n\"},\"text_es_US\":{\"html\":\"<p>&lt;h4 aria-level=3 lang=&quot;en&quot;&gt;Important Legal Disclosures &amp; Information&lt;/h4&gt;&lt;p lang=&quot;en&quot;&gt;Citibank.com provides information about and access to accounts and financial services provided by Citibank, N.A. and its affiliates in the United States and its territories. This is not, and should not be construed as, an offer, invitation, or solicitation to buy or sell any of the banking or financial products mentioned herein to individuals outside of the United States. The products and services mentioned herein are not offered to "
+  }
+]

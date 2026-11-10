@@ -1,0 +1,371 @@
+[
+  {
+    "top": 2316,
+    "h": 48,
+    "left": 732,
+    "w": 251,
+    "tag": "button",
+    "cls": "cds-button primary-btn w-100 HP26_BNK_Q4CPBSEO cds",
+    "text": "See How"
+  },
+  {
+    "top": 2536,
+    "h": 20,
+    "left": 96,
+    "w": 220,
+    "tag": "div",
+    "cls": "title ng-star-inserted",
+    "text": "Why Citi"
+  },
+  {
+    "top": 2536,
+    "h": 20,
+    "left": 336,
+    "w": 220,
+    "tag": "div",
+    "cls": "title ng-star-inserted",
+    "text": "Wealth Management"
+  },
+  {
+    "top": 2536,
+    "h": 20,
+    "left": 576,
+    "w": 220,
+    "tag": "div",
+    "cls": "title ng-star-inserted",
+    "text": "Business Banking"
+  },
+  {
+    "top": 2536,
+    "h": 20,
+    "left": 815,
+    "w": 220,
+    "tag": "div",
+    "cls": "title ng-star-inserted",
+    "text": "Rates"
+  },
+  {
+    "top": 2536,
+    "h": 20,
+    "left": 1055,
+    "w": 220,
+    "tag": "div",
+    "cls": "title ng-star-inserted",
+    "text": "Help & Support"
+  },
+  {
+    "top": 2544,
+    "h": 53,
+    "left": 1304,
+    "w": 51,
+    "tag": "img",
+    "cls": "",
+    "text": "[Citi_Icon_Sprite_v2.svg]"
+  },
+  {
+    "top": 2572,
+    "h": 32,
+    "left": 96,
+    "w": 75,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Our Story"
+  },
+  {
+    "top": 2572,
+    "h": 32,
+    "left": 336,
+    "w": 147,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Citigold Private Client"
+  },
+  {
+    "top": 2572,
+    "h": 32,
+    "left": 576,
+    "w": 155,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Small Business Accounts"
+  },
+  {
+    "top": 2572,
+    "h": 32,
+    "left": 815,
+    "w": 115,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Personal Banking"
+  },
+  {
+    "top": 2572,
+    "h": 32,
+    "left": 1055,
+    "w": 81,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Contact Us"
+  },
+  {
+    "top": 2579,
+    "h": 11,
+    "left": 378,
+    "w": 8,
+    "tag": "sup",
+    "cls": "",
+    "text": "®"
+  },
+  {
+    "top": 2604,
+    "h": 32,
+    "left": 96,
+    "w": 64,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Careers"
+  },
+  {
+    "top": 2604,
+    "h": 32,
+    "left": 336,
+    "w": 63,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Citigold"
+  },
+  {
+    "top": 2604,
+    "h": 32,
+    "left": 576,
+    "w": 139,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Commercial Accounts"
+  },
+  {
+    "top": 2604,
+    "h": 32,
+    "left": 815,
+    "w": 89,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Credit Cards"
+  },
+  {
+    "top": 2604,
+    "h": 32,
+    "left": 1055,
+    "w": 106,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Security Center"
+  },
+  {
+    "top": 2636,
+    "h": 32,
+    "left": 96,
+    "w": 138,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Benefits and Services"
+  },
+  {
+    "top": 2636,
+    "h": 32,
+    "left": 336,
+    "w": 84,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Citi Priority"
+  },
+  {
+    "top": 2636,
+    "h": 32,
+    "left": 815,
+    "w": 74,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Mortgage"
+  },
+  {
+    "top": 2668,
+    "h": 32,
+    "left": 96,
+    "w": 67,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Rewards"
+  },
+  {
+    "top": 2668,
+    "h": 32,
+    "left": 336,
+    "w": 111,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Citi Private Bank"
+  },
+  {
+    "top": 2668,
+    "h": 32,
+    "left": 815,
+    "w": 91,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Home Equity"
+  },
+  {
+    "top": 2700,
+    "h": 32,
+    "left": 96,
+    "w": 129,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Citi Entertainment"
+  },
+  {
+    "top": 2700,
+    "h": 32,
+    "left": 815,
+    "w": 104,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Personal Loans"
+  },
+  {
+    "top": 2707,
+    "h": 11,
+    "left": 196,
+    "w": 8,
+    "tag": "sup",
+    "cls": "",
+    "text": "®"
+  },
+  {
+    "top": 2732,
+    "h": 32,
+    "left": 96,
+    "w": 97,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Special Offers"
+  },
+  {
+    "top": 2804,
+    "h": 40,
+    "left": 96,
+    "w": 137,
+    "tag": "img",
+    "cls": "Googleplay",
+    "text": "[Citi_Icon_Sprite_v2.svg]"
+  },
+  {
+    "top": 2809,
+    "h": 16,
+    "left": 1243,
+    "w": 10,
+    "tag": "img",
+    "cls": "facebook",
+    "text": "[Citi_Icon_Sprite_v2.svg]"
+  },
+  {
+    "top": 2895,
+    "h": 32,
+    "left": 218,
+    "w": 146,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Terms & Conditions"
+  },
+  {
+    "top": 2895,
+    "h": 32,
+    "left": 364,
+    "w": 82,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Privacy"
+  },
+  {
+    "top": 2895,
+    "h": 32,
+    "left": 446,
+    "w": 148,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Notice at Collection"
+  },
+  {
+    "top": 2895,
+    "h": 32,
+    "left": 594,
+    "w": 287,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Do Not Sell or Share My Personal Information"
+  },
+  {
+    "top": 2895,
+    "h": 32,
+    "left": 886,
+    "w": 108,
+    "tag": "a",
+    "cls": "cta-link btn btn-link ng-star-inserted",
+    "text": "Accessibility"
+  },
+  {
+    "top": 2902,
+    "h": 18,
+    "left": 96,
+    "w": 122,
+    "tag": "p",
+    "cls": "copyright ng-star-inserted",
+    "text": "© 2026 Citigroup Inc"
+  },
+  {
+    "top": 2990,
+    "h": 16,
+    "left": 96,
+    "w": 1248,
+    "tag": "h4",
+    "cls": "",
+    "text": "Important Legal Disclosures & Information"
+  },
+  {
+    "top": 3014,
+    "h": 54,
+    "left": 96,
+    "w": 1248,
+    "tag": "p",
+    "cls": "",
+    "text": "Citibank.com provides information about and access to accounts and financial services provided by Citibank, N."
+  },
+  {
+    "top": 3084,
+    "h": 54,
+    "left": 96,
+    "w": 1248,
+    "tag": "p",
+    "cls": "",
+    "text": "Terms, conditions and fees for accounts, products, programs and services are subject to change. Not all accoun"
+  },
+  {
+    "top": 3154,
+    "h": 18,
+    "left": 96,
+    "w": 1248,
+    "tag": "p",
+    "cls": "",
+    "text": "Deposit and lending products are provided by Citibank, N.A., Member FDIC and Equal Housing Lender. NMLS 412915"
+  },
+  {
+    "top": 3240,
+    "h": 57,
+    "left": 35,
+    "w": 88,
+    "tag": "img",
+    "cls": "imgBottomCitiLogo_Desktop",
+    "text": "[citiredesign-footer.svg]"
+  }
+]

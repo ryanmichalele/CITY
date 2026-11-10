@@ -1,0 +1,132 @@
+[
+  {
+    "file": "citiredesign.svg",
+    "alt": "Citi",
+    "left": 40,
+    "top": -3,
+    "w": 88,
+    "h": 88,
+    "fit": "fill",
+    "pos": "50% 50%"
+  },
+  {
+    "file": "Citi_Icon_Sprite_Banner_v2.svg",
+    "alt": "Citi FDIC Insured",
+    "left": 148,
+    "top": 30,
+    "w": 427,
+    "h": 32,
+    "fit": "none",
+    "pos": "-20px -173px"
+  },
+  {
+    "file": "HP_20382_Hero.png",
+    "alt": "Earn 50,000 AAdvantage® bonus miles",
+    "left": 560,
+    "top": 234,
+    "w": 320,
+    "h": 224,
+    "fit": "fill",
+    "pos": "50% 50%"
+  },
+  {
+    "file": "HP_17586_Module_3UP_DP.jpg",
+    "alt": "Great for Balance Transfers",
+    "left": 89,
+    "top": 700,
+    "w": 382,
+    "h": 220,
+    "fit": "cover",
+    "pos": "50% 50%"
+  },
+  {
+    "file": "HP_20384_3UP_Costco_Consumer.jpg",
+    "alt": "Your Favorite Store. Your Favorite Card.",
+    "left": 529,
+    "top": 700,
+    "w": 382,
+    "h": 220,
+    "fit": "cover",
+    "pos": "50% 50%"
+  },
+  {
+    "file": "HP_19881_Module_3UP.jpg",
+    "alt": "Open. Deposit. Earn $325.",
+    "left": 969,
+    "top": 700,
+    "w": 382,
+    "h": 220,
+    "fit": "cover",
+    "pos": "50% 50%"
+  },
+  {
+    "file": "HP_18285_3UP_Module.jpg",
+    "alt": "Choose the right Citi® credit card for you",
+    "left": 182,
+    "top": 1187,
+    "w": 526,
+    "h": 296,
+    "fit": "cover",
+    "pos": "50% 50%"
+  },
+  {
+    "file": "HP_12213_Module.jpg",
+    "alt": "Earn 2% Cash Back",
+    "left": 732,
+    "top": 1579,
+    "w": 526,
+    "h": 296,
+    "fit": "cover",
+    "pos": "50% 50%"
+  },
+  {
+    "file": "HP_19886_GPA.png",
+    "alt": "Earn more with Citi Premium Boost",
+    "left": 182,
+    "top": 1970,
+    "w": 526,
+    "h": 526,
+    "fit": "cover",
+    "pos": "50% 50%"
+  },
+  {
+    "file": "Citi_Icon_Sprite_v2.svg",
+    "alt": "Equal Housing Lender",
+    "left": 1304,
+    "top": 2544,
+    "w": 51,
+    "h": 53,
+    "fit": "none",
+    "pos": "-221px -25px"
+  },
+  {
+    "file": "Citi_Icon_Sprite_v2.svg",
+    "alt": "undefined",
+    "left": 96,
+    "top": 2804,
+    "w": 137,
+    "h": 40,
+    "fit": "none",
+    "pos": "-468px -20px"
+  },
+  {
+    "file": "Citi_Icon_Sprite_v2.svg",
+    "alt": "undefined",
+    "left": 257,
+    "top": 2804,
+    "w": 120,
+    "h": 40,
+    "fit": "none",
+    "pos": "-299px -20px"
+  },
+  {
+    "file": "citiredesign-footer.svg",
+    "alt": "Citi Banner",
+    "left": 35,
+    "top": 3240,
+    "w": 88,
+    "h": 57,
+    "fit": "fill",
+    "pos": "50% 50%"
+  }
+]

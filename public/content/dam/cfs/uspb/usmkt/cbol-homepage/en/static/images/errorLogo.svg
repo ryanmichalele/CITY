@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>Icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="P1.-Banner-Alerts" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1.1A_Desktop" transform="translate(-60.000000, -705.000000)">
+            <g id="Page-Level" transform="translate(0.000000, 213.000000)">
+                <g id="White-Banner" transform="translate(20.000000, 470.000000)">
+                    <g id="Critical-Banner">
+                        <g id="Icon" transform="translate(40.000000, 22.000000)">
+                            <circle id="red-base" fill="#D60000" cx="10" cy="10" r="10"></circle>
+                            <path d="M11.48,8.608 L11.48,4 L9.24,4 L9.24,8.608 L9.608,11.68 L11.112,11.68 L11.48,8.608 Z M11.72,14.016 C11.72,13.28 11.096,12.656 10.36,12.656 C9.624,12.656 9,13.28 9,14.016 C9,14.752 9.624,15.376 10.36,15.376 C11.096,15.376 11.72,14.752 11.72,14.016 L11.72,14.016 Z" id="!" fill="#FFFFFF"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

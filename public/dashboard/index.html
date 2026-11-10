@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Online Banking Dashboard</title>
+  <meta name="description" content="Personal banking dashboard — frontend prototype only.">
+  <link rel="icon" href="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/dashboard/dashboard.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="bank-header" id="bank-header">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="Bank home">
+        <img class="brand-logo" src="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg" alt="Bank logo" width="88" height="88">
+      </a>
+      <nav class="header-nav">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/account-application/">Open an Account</a>
+        <button class="btn btn-outline nav-btn" id="signout-btn">Sign Out</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="dashboard-page">
+    <div class="dashboard-shell">
+      <aside class="bank-sidebar" id="bank-sidebar">
+        <div class="sidebar-inner">
+          <div class="brand-cell">
+            <a class="brand-link" href="/" aria-label="Bank home">
+              <img class="brand-logo-sm" src="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg" alt="Bank logo" width="40" height="40">
+              <span class="brand-name">Bank</span>
+            </a>
+          </div>
+          <nav class="sidebar-nav" aria-label="Main navigation">
+            <button class="nav-item active" data-section="dashboard" id="nav-dashboard">
+              <span class="nav-icon" aria-hidden="true">&#128204;</span>
+              <span class="nav-label">Accounts</span>
+            </button>
+            <button class="nav-item" data-section="payments" id="nav-payments">
+              <span class="nav-icon" aria-hidden="true">&#128222;</span>
+              <span class="nav-label">Payments &amp; Transfers</span>
+            </button>
+            <button class="nav-item" data-section="services" id="nav-services">
+              <span class="nav-icon" aria-hidden="true">&#128187;</span>
+              <span class="nav-label">Services</span>
+            </button>
+            <button class="nav-item" data-section="rewards" id="nav-rewards">
+              <span class="nav-icon" aria-hidden="true">&#128176;</span>
+              <span class="nav-label">Rewards</span>
+            </button>
+          </nav>
+          <div class="sidebar-footer">
+            <button class="btn btn-block btn-outline" id="sidebar-signout">Sign Out</button>
+          </div>
+        </div>
+      </aside>
+
+      <section class="dashboard-content" id="dashboard-content">
+        <section class="section welcome-section" id="section-welcome">
+          <div class="welcome-card">
+            <h1 class="welcome-heading" id="welcome-heading">Welcome, <span id="welcome-firstname">Customer</span>!</h1>
+            <div class="welcome-meta" id="welcome-meta">
+              <p class="meta-line"><span class="meta-label">Name:</span> <span id="meta-fullname" class="meta-value">—</span></p>
+              <p class="meta-line"><span class="meta-label">City, State ZIP:</span> <span id="meta-citystate" class="meta-value">—</span></p>
+              <p class="meta-line"><span class="meta-label">Last sign-in:</span> <span id="meta-lastsignin" class="meta-value">—</span></p>
+              <p class="meta-line"><span class="meta-label">Device:</span> <span id="meta-device" class="meta-value">—</span></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section accounts-section" id="section-accounts">
+          <div class="section-head">
+            <h2 class="section-title">Accounts</h2>
+          </div>
+
+          <div class="account-grid" id="account-grid">
+            <!-- injected by dashboard.js -->
+          </div>
+        </section>
+
+        <section class="section products-section hidden" id="section-products">
+          <div class="section-head">
+            <h2 class="section-title">Additional Banking Products</h2>
+          </div>
+          <div class="product-grid" id="product-grid">
+            <!-- injected by dashboard.js -->
+          </div>
+        </section>
+
+        <section class="section coming-soon-section hidden" id="section-coming-soon">
+          <div class="coming-soon-card">
+            <h2 class="coming-title">Coming Soon</h2>
+            <p class="coming-msg">This section is not yet implemented in this frontend prototype.</p>
+            <button class="btn btn-primary" id="back-to-accounts">Back to Accounts</button>
+          </div>
+        </section>
+      </section>
+    </div>
+  </main>
+
+  <footer class="bank-footer citi-footer">
+    <div class="footer-inner">
+      <nav class="footer-columns" aria-label="Footer navigation">
+        <div class="footer-col">
+          <h3 class="footer-col-title">Why Citi</h3>
+          <ul>
+            <li><a href="https://www.citigroup.com/citi/" target="_blank" rel="noopener">Our Story <span class="sr-only">Opens in new window</span></a></li>
+            <li><a href="https://jobs.citi.com/" target="_blank" rel="noopener">Careers <span class="sr-only">Opens in new window</span></a></li>
+            <li><a href="#">Benefits and Services</a></li>
+            <li><a href="#">Rewards</a></li>
+            <li><a href="#">Citi Entertainment<sup>&reg;</sup></a></li>
+            <li><a href="#">Special Offers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Wealth Management</h3>
+          <ul>
+            <li><a href="#">Citigold<sup>&reg;</sup> Private Client</a></li>
+            <li><a href="#">Citigold</a></li>
+            <li><a href="#">Citi Priority</a></li>
+            <li><a href="#">Citi Private Bank</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Business Banking</h3>
+          <ul>
+            <li><a href="#">Small Business Accounts</a></li>
+            <li><a href="#">Commercial Accounts</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Rates</h3>
+          <ul>
+            <li><a href="#">Personal Banking</a></li>
+            <li><a href="#">Credit Cards</a></li>
+            <li><a href="#">Mortgage</a></li>
+            <li><a href="#">Home Equity</a></li>
+            <li><a href="#">Personal Loans</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Help &amp; Support</h3>
+          <ul>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Help &amp; FAQs</a></li>
+            <li><a href="#">Security Center</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="footer-social-bar">
+        <div class="footer-ehl">
+          <span class="ehl-icon" aria-hidden="true">&#127968;</span>
+          <span>Equal Housing Lender</span>
+        </div>
+        <div class="footer-social" aria-label="Social media">
+          <a href="https://www.facebook.com/citibank" target="_blank" rel="noopener" aria-label="Facebook">facebook</a>
+          <a href="https://twitter.com/Citibank/" target="_blank" rel="noopener" aria-label="Twitter">twitter</a>
+          <a href="https://www.youtube.com/citi" target="_blank" rel="noopener" aria-label="YouTube">youtube</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">&copy; 2026 Citigroup Inc</p>
+      </div>
+
+      <div class="footer-disclosures">
+        <h3 class="disclosures-title">Important Legal Disclosures &amp; Information</h3>
+        <p>Citibank.com provides information about and access to accounts and financial services provided by Citibank, N.A. and its affiliates in the United States and its territories. It does not, and should not be construed as, an offer, invitation or solicitation of services to individuals outside of the United States.</p>
+        <p>Terms, conditions and fees for accounts, products, programs and services are subject to change. Not all accounts, products, and services as well as pricing described here are available in all jurisdictions or to all customers. Your eligibility for a particular product and service is subject to a final determination by Citibank. Your country of citizenship, domicile, or residence, if other than the United States, may have laws, rules, and regulations that govern or affect your application for and use of our accounts, products and services, including laws and regulations regarding taxes, exchange and/or capital controls that you are responsible for following.</p>
+        <p>The products, account packages, promotional offers and services described in this website may not apply to customers of International Personal Bank U.S. in the Citigold<sup>&reg;</sup> Private Client International, Citigold<sup>&reg;</sup> International, Citi International Personal, Citi Global Executive Preferred, and Citi Global Executive Account Packages.</p>
+        <p>Deposit products and services are offered by Citibank, N.A., Member FDIC</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="/dashboard/dashboard.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+{
+  "p1": {
+    "failed": [],
+    "remote": [],
+    "broken": [],
+    "imgs": [
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg",
+        "ok": true,
+        "nw": 89
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Banner_v2.svg",
+        "ok": true,
+        "nw": 600
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Banner_v2.svg",
+        "ok": true,
+        "nw": 600
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Banner_v2.svg",
+        "ok": true,
+        "nw": 600
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/109-smallbguide.svg",
+        "ok": true,
+        "nw": 26
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_18285_Hero.png",
+        "ok": true,
+        "nw": 483
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_18285_Hero.png",
+        "ok": true,
+        "nw": 483
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_7430_M1M7_Image.jpg",
+        "ok": true,
+        "nw": 560
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_7591_Module_3UP.jpg",
+        "ok": true,
+        "nw": 560
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_16036_AA_Family_3UP.jpg",
+        "ok": true,
+        "nw": 560
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP25_STRATA_FAM_July_LRN_3UP_Module.jpg",
+        "ok": true,
+        "nw": 560
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_7385_M1_Image.jpg",
+        "ok": true,
+        "nw": 560
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_10592__GPA_HP24_Cnt_LRN_LAM_SvgsHab.png",
+        "ok": true,
+        "nw": 966
+      },
+      {
+        "src": "data:image/gif;base64,R0lGODlhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+        "ok": true,
+        "nw": 1
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/Citi_Icon_Sprite_v2.svg",
+        "ok": true,
+        "nw": 1000
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/Citi_Icon_Sprite_v2.svg",
+        "ok": true,
+        "nw": 1000
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/Citi_Icon_Sprite_v2.svg",
+        "ok": true,
+        "nw": 1000
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/Citi_Icon_Sprite_v2.svg",
+        "ok": true,
+        "nw": 1000
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/Citi_Icon_Sprite_v2.svg",
+        "ok": true,
+        "nw": 1000
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/Citi_Icon_Sprite_v2.svg",
+        "ok": true,
+        "nw": 1000
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/citiredesign-footer.svg",
+        "ok": true,
+        "nw": 88
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/citiredesign-footer.svg",
+        "ok": true,
+        "nw": 88
+      }
+    ]
+  },
+  "p2": {
+    "failed": [],
+    "remote": [],
+    "broken": [],
+    "imgs": [
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg",
+        "ok": true,
+        "nw": 89
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Banner_v2.svg",
+        "ok": true,
+        "nw": 600
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Banner_v2.svg",
+        "ok": true,
+        "nw": 600
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Banner_v2.svg",
+        "ok": true,
+        "nw": 600
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/109-smallbguide.svg",
+        "ok": true,
+        "nw": 26
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Nav_v3.svg",
+        "ok": true,
+        "nw": 978
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_18285_Hero.png",
+        "ok": true,
+        "nw": 483
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_18285_Hero.png",
+        "ok": true,
+        "nw": 483
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_7430_M1M7_Image.jpg",
+        "ok": true,
+        "nw": 560
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_7591_Module_3UP.jpg",
+        "ok": true,
+        "nw": 560
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_16036_AA_Family_3UP.jpg",
+        "ok": true,
+        "nw": 560
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP25_STRATA_FAM_July_LRN_3UP_Module.jpg",
+        "ok": true,
+        "nw": 560
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_7385_M1_Image.jpg",
+        "ok": true,
+        "nw": 560
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/usmkt/cbol-homepage/en/banners/images/HP_10592__GPA_HP24_Cnt_LRN_LAM_SvgsHab.png",
+        "ok": true,
+        "nw": 966
+      },
+      {
+        "src": "data:image/gif;base64,R0lGODlhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+        "ok": true,
+        "nw": 1
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/Citi_Icon_Sprite_v2.svg",
+        "ok": true,
+        "nw": 1000
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/Citi_Icon_Sprite_v2.svg",
+        "ok": true,
+        "nw": 1000
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/Citi_Icon_Sprite_v2.svg",
+        "ok": true,
+        "nw": 1000
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/Citi_Icon_Sprite_v2.svg",
+        "ok": true,
+        "nw": 1000
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/Citi_Icon_Sprite_v2.svg",
+        "ok": true,
+        "nw": 1000
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/Citi_Icon_Sprite_v2.svg",
+        "ok": true,
+        "nw": 1000
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/citiredesign-footer.svg",
+        "ok": true,
+        "nw": 88
+      },
+      {
+        "src": "http://localhost:3000/content/dam/cfs/uspb/global-nav/en/web/footer/footer-links/images/citiredesign-footer.svg",
+        "ok": true,
+        "nw": 88
+      }
+    ]
+  }
+}

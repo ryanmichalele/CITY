@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open an Account | Citi</title>
+  <meta name="description" content="Open a bank account online.">
+  <link rel="icon" href="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/account-application/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="Citi home">
+        <img class="brand-logo" src="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg" alt="Citi" width="88" height="88">
+      </a>
+      <img class="fdic-badge" src="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Banner_v2.svg" alt="Citi FDIC Insured">
+      <div class="header-right">
+        <span class="secure-note">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17 9V7a5 5 0 0 0-10 0v2H5v12h14V9h-2Zm-8-2a3 3 0 0 1 6 0v2H9V7Zm8 12H7v-8h10v8Z"/></svg>
+          Secure application
+        </span>
+        <a class="back-home" href="/">Back to Home</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page-intro">
+      <p class="eyebrow">Citi<sup>®</sup> Personal Banking</p>
+      <h1 id="page-title">Open an Account</h1>
+      <p class="page-sub" id="page-subtitle">Apply online in eight short steps. You can review and edit everything before you submit.</p>
+    </div>
+
+    <nav class="progress-wrap" aria-label="Application progress">
+      <ol class="stepper" id="stepper">
+        <li data-step="1"><span class="dot">1</span><span class="label">Account Type</span></li>
+        <li data-step="2"><span class="dot">2</span><span class="label">Personal</span></li>
+        <li data-step="3"><span class="dot">3</span><span class="label">Contact</span></li>
+        <li data-step="4"><span class="dot">4</span><span class="label">Employment &amp; Finance</span></li>
+        <li data-step="5"><span class="dot">5</span><span class="label">Tax &amp; Legal</span></li>
+        <li data-step="6"><span class="dot">6</span><span class="label">Review</span></li>
+        <li data-step="7"><span class="dot">7</span><span class="label">Agreements</span></li>
+        <li data-step="8"><span class="dot">8</span><span class="label">Decision</span></li>
+      </ol>
+      <div class="stepper-mobile" id="stepper-mobile" aria-hidden="true"></div>
+    </nav>
+
+    <form id="app-form" class="app-card" novalidate autocomplete="off">
+      <!-- STEP 1 ------------------------------------------------------------------>
+      <section class="step-panel" data-step="1" aria-labelledby="step1-title">
+        <div class="step-head">
+          <p class="step-count">Step 1 of 8</p>
+          <h2 id="step1-title" tabindex="-1">Choose Your Account Type</h2>
+          <p class="step-sub">Select the account you would like to open.</p>
+        </div>
+
+        <div class="account-grid" data-field-group="accountType" role="radiogroup" aria-labelledby="step1-title">
+          <label class="account-card">
+            <input type="radio" name="accountType" value="checking" data-model="accountType">
+            <span class="account-body">
+              <span class="account-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26"><path fill="currentColor" d="M21 7H3a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1Zm-1 11H4v-4h5a3 3 0 0 0 6 0h5v4Zm0-6h-6.1a3 3 0 0 0-5.8 0H4V9h16v3Z"/></svg>
+              </span>
+              <span class="account-name">Checking Account</span>
+              <span class="account-desc">For everyday banking and transactions. Deposits, withdrawals, and payments.</span>
+              <span class="account-meta"><span>Monthly service fee: $0 with qualifying activity</span><span>Minimum opening deposit: $25</span></span>
+            </span>
+          </label>
+
+          <label class="account-card">
+            <input type="radio" name="accountType" value="savings" data-model="accountType">
+            <span class="account-body">
+              <span class="account-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26"><path fill="currentColor" d="M19 7h-2.2A3.8 3.8 0 0 0 12 4a3.8 3.8 0 0 0-4.8 3H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Zm-7-1a2 2 0 0 1 2 2h-4a2 2 0 0 1 2-2Zm7 12H5v-3h2a5 5 0 0 0 10 0h2v3Zm0-5h-2.1a5 5 0 0 1-9.8 0H5V9h14v4Z"/></svg>
+              </span>
+              <span class="account-name">Savings Account</span>
+              <span class="account-desc">For saving money, with applicable interest and account conditions.</span>
+              <span class="account-meta"><span>Monthly service fee: $0 with qualifying balance</span><span>Minimum opening deposit: $25</span></span>
+            </span>
+          </label>
+
+          <label class="account-card">
+            <input type="radio" name="accountType" value="money-market" data-model="accountType">
+            <span class="account-body">
+              <span class="account-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26"><path fill="currentColor" d="M3 20h18v1H3v-1Zm2-3h2v2H5v-2Zm4 0h2v2H9v-2Zm4 0h2v2h-2v-2Zm4 0h2v2h-2v-2ZM4 13l4-6 4 3 4-5 4 4v2l-5-2-3 4-4 3-4-5v2Z"/></svg>
+              </span>
+              <span class="account-name">Money Market Account</span>
+              <span class="account-desc">For eligible savings and money market banking services with tiered rates.</span>
+              <span class="account-meta"><span>Monthly service fee: $12, waivable</span><span>Minimum opening deposit: $100</span></span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP 2 ------------------------------------------------------------------>
+      <section class="step-panel" data-step="2" aria-labelledby="step2-title" hidden>
+        <div class="step-head">
+          <p class="step-count">Step 2 of 8</p>
+          <h2 id="step2-title" tabindex="-1">Tell Us About Yourself</h2>
+          <p class="step-sub">Enter your legal name exactly as it appears on your government-issued ID.</p>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="field">
+            <label for="firstName">First name <span class="req">*</span></label>
+            <input id="firstName" name="firstName" type="text" data-model="personal.firstName" autocomplete="given-name">
+          </div>
+          <div class="field">
+            <label for="middleName">Middle name <span class="opt">(optional)</span></label>
+            <input id="middleName" name="middleName" type="text" data-model="personal.middleName" autocomplete="additional-name">
+          </div>
+          <div class="field">
+            <label for="lastName">Last name <span class="req">*</span></label>
+            <input id="lastName" name="lastName" type="text" data-model="personal.lastName" autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="dob">Date of birth <span class="req">*</span></label>
+            <input id="dob" name="dob" type="date" data-model="personal.dob" autocomplete="bday">
+            <p class="hint">You must be at least 18 years old to open an account.</p>
+          </div>
+          <div class="field">
+            <label for="ssn">SSN / ITIN <span class="req">*</span></label>
+            <div class="input-with-action">
+              <input id="ssn" name="ssn" type="password" inputmode="numeric" data-model="personal.ssn" autocomplete="off" maxlength="11" placeholder="XXX-XX-XXXX">
+              <button type="button" class="reveal-btn" id="toggle-ssn" aria-label="Show SSN or ITIN" aria-pressed="false">Show</button>
+            </div>
+            <p class="hint">Your information is protected.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="citizenship">Citizenship or residency status <span class="req">*</span></label>
+            <select id="citizenship" name="citizenship" data-model="personal.citizenship">
+              <option value="">Select status</option>
+              <option value="us-citizen">U.S. citizen</option>
+              <option value="permanent-resident">U.S. permanent resident</option>
+              <option value="non-resident-alien">Non-resident alien</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field" data-field-group="personal.ownership">
+            <span class="field-label">Account ownership type <span class="req">*</span></span>
+            <div class="radio-row">
+              <label class="radio-pill"><input type="radio" name="ownership" value="individual" data-model="personal.ownership"><span>Individual</span></label>
+              <label class="radio-pill"><input type="radio" name="ownership" value="joint" data-model="personal.ownership"><span>Joint</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="notice notice-info">
+          <strong>Your privacy matters.</strong> In a real application this information would be encrypted and transmitted over a secure connection. Nothing is transmitted here.
+        </div>
+      </section>
+
+      <!-- STEP 3 ------------------------------------------------------------------>
+      <section class="step-panel" data-step="3" aria-labelledby="step3-title" hidden>
+        <div class="step-head">
+          <p class="step-count">Step 3 of 8</p>
+          <h2 id="step3-title" tabindex="-1">Your Contact Details</h2>
+          <p class="step-sub">We will use these details to reach you about your application.</p>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="email">Email address <span class="req">*</span></label>
+            <input id="email" name="email" type="email" data-model="contact.email" autocomplete="email" placeholder="name@example.com">
+          </div>
+          <div class="field">
+            <label for="phone">Mobile phone number <span class="req">*</span></label>
+            <input id="phone" name="phone" type="tel" data-model="contact.phone" autocomplete="tel" inputmode="tel" placeholder="(555) 123-4567">
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="street">Street address <span class="req">*</span></label>
+            <input id="street" name="street" type="text" data-model="contact.street" autocomplete="address-line1">
+          </div>
+          <div class="field">
+            <label for="apt">Apartment / unit <span class="opt">(optional)</span></label>
+            <input id="apt" name="apt" type="text" data-model="contact.apt" autocomplete="address-line2">
+          </div>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="field">
+            <label for="city">City <span class="req">*</span></label>
+            <input id="city" name="city" type="text" data-model="contact.city" autocomplete="address-level2">
+          </div>
+          <div class="field">
+            <label for="state">State <span class="req">*</span></label>
+            <select id="state" name="state" data-model="contact.state" autocomplete="address-level1">
+              <option value="">Select state</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="zip">ZIP code <span class="req">*</span></label>
+            <input id="zip" name="zip" type="text" data-model="contact.zip" inputmode="numeric" autocomplete="postal-code" maxlength="10" placeholder="12345">
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="country">Country <span class="req">*</span></label>
+            <select id="country" name="country" data-model="contact.country" autocomplete="country-name">
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="MX">Mexico</option>
+              <option value="GB">United Kingdom</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field" data-field-group="contact.mailingSame">
+            <span class="field-label">Mailing address same as residential address? <span class="req">*</span></span>
+            <div class="radio-row">
+              <label class="radio-pill"><input type="radio" name="mailingSame" value="yes" data-model="contact.mailingSame"><span>Yes</span></label>
+              <label class="radio-pill"><input type="radio" name="mailingSame" value="no" data-model="contact.mailingSame"><span>No</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div id="mailing-block" class="sub-block" hidden>
+          <h3 class="sub-title">Mailing address</h3>
+          <div class="grid grid-2">
+            <div class="field">
+              <label for="mailStreet">Street address <span class="req">*</span></label>
+              <input id="mailStreet" name="mailStreet" type="text" data-model="contact.mailing.street">
+            </div>
+            <div class="field">
+              <label for="mailApt">Apartment / unit <span class="opt">(optional)</span></label>
+              <input id="mailApt" name="mailApt" type="text" data-model="contact.mailing.apt">
+            </div>
+          </div>
+          <div class="grid grid-3">
+            <div class="field">
+              <label for="mailCity">City <span class="req">*</span></label>
+              <input id="mailCity" name="mailCity" type="text" data-model="contact.mailing.city">
+            </div>
+            <div class="field">
+              <label for="mailState">State <span class="req">*</span></label>
+              <select id="mailState" name="mailState" data-model="contact.mailing.state"></select>
+            </div>
+            <div class="field">
+              <label for="mailZip">ZIP code <span class="req">*</span></label>
+              <input id="mailZip" name="mailZip" type="text" data-model="contact.mailing.zip" inputmode="numeric" maxlength="10" placeholder="12345">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 4 ------------------------------------------------------------------>
+      <section class="step-panel" data-step="4" aria-labelledby="step4-title" hidden>
+        <div class="step-head">
+          <p class="step-count">Step 4 of 8</p>
+          <h2 id="step4-title" tabindex="-1">Employment &amp; Financial Information</h2>
+          <p class="step-sub">Tell us how you earn and how you expect to use the account.</p>
+        </div>
+
+        <h3 class="sub-title">Employment</h3>
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="empStatus">Employment status <span class="req">*</span></label>
+            <select id="empStatus" name="empStatus" data-model="employment.status">
+              <option value="">Select status</option>
+              <option value="employed">Employed</option>
+              <option value="self-employed">Self-Employed</option>
+              <option value="business-owner">Business Owner</option>
+              <option value="unemployed">Unemployed</option>
+              <option value="retired">Retired</option>
+              <option value="student">Student</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="occupation">Occupation <span class="req">*</span></label>
+            <input id="occupation" name="occupation" type="text" data-model="employment.occupation" placeholder="e.g. Registered Nurse">
+          </div>
+        </div>
+
+        <div id="employer-block" class="grid grid-2" hidden>
+          <div class="field">
+            <label for="employer">Employer / business name <span class="req">*</span></label>
+            <input id="employer" name="employer" type="text" data-model="employment.employer">
+          </div>
+          <div class="field">
+            <label for="jobTitle">Job title <span class="req">*</span></label>
+            <input id="jobTitle" name="jobTitle" type="text" data-model="employment.jobTitle">
+          </div>
+          <div class="field">
+            <label for="industry">Industry <span class="req">*</span></label>
+            <select id="industry" name="industry" data-model="employment.industry">
+              <option value="">Select industry</option>
+              <option>Accounting / Finance</option>
+              <option>Banking / Insurance</option>
+              <option>Education</option>
+              <option>Government / Public Sector</option>
+              <option>Healthcare</option>
+              <option>Information Technology</option>
+              <option>Manufacturing</option>
+              <option>Retail / Hospitality</option>
+              <option>Transportation / Logistics</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="income">Annual income range <span class="req">*</span></label>
+            <select id="income" name="income" data-model="employment.income">
+              <option value="">Select range</option>
+              <option>Under $25,000</option>
+              <option>$25,000 – $49,999</option>
+              <option>$50,000 – $74,999</option>
+              <option>$75,000 – $99,999</option>
+              <option>$100,000 – $149,999</option>
+              <option>$150,000 – $249,999</option>
+              <option>$250,000 or more</option>
+            </select>
+          </div>
+        </div>
+
+        <h3 class="sub-title">Financial information</h3>
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="incomeSource">Primary source of income <span class="req">*</span></label>
+            <select id="incomeSource" name="incomeSource" data-model="financial.incomeSource">
+              <option value="">Select source</option>
+              <option>Salary / wages</option>
+              <option>Self-employment income</option>
+              <option>Business income</option>
+              <option>Retirement / pension</option>
+              <option>Investments</option>
+              <option>Social Security</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="sourceFunds">Source of funds for this account <span class="req">*</span></label>
+            <select id="sourceFunds" name="sourceFunds" data-model="financial.sourceFunds">
+              <option value="">Select source</option>
+              <option>Employment income</option>
+              <option>Savings</option>
+              <option>Business revenue</option>
+              <option>Investment proceeds</option>
+              <option>Inheritance / gift</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="monthlyDeposits">Expected monthly deposits <span class="req">*</span></label>
+            <select id="monthlyDeposits" name="monthlyDeposits" data-model="financial.monthlyDeposits">
+              <option value="">Select amount</option>
+              <option>Less than $1,000</option>
+              <option>$1,000 – $4,999</option>
+              <option>$5,000 – $9,999</option>
+              <option>$10,000 – $24,999</option>
+              <option>$25,000 or more</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="monthlyWithdrawals">Expected monthly withdrawals <span class="req">*</span></label>
+            <select id="monthlyWithdrawals" name="monthlyWithdrawals" data-model="financial.monthlyWithdrawals">
+              <option value="">Select amount</option>
+              <option>Less than $1,000</option>
+              <option>$1,000 – $4,999</option>
+              <option>$5,000 – $9,999</option>
+              <option>$10,000 – $24,999</option>
+              <option>$25,000 or more</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="purpose">Purpose of opening the account <span class="req">*</span></label>
+            <select id="purpose" name="purpose" data-model="financial.purpose">
+              <option value="">Select purpose</option>
+              <option>Everyday spending</option>
+              <option>Saving for a goal</option>
+              <option>Direct deposit and bill pay</option>
+              <option>Business operations</option>
+              <option>Building credit history</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="activity">Expected account activity <span class="req">*</span></label>
+            <select id="activity" name="activity" data-model="financial.activity">
+              <option value="">Select activity</option>
+              <option>Low — a few transactions per month</option>
+              <option>Moderate — regular deposits and payments</option>
+              <option>High — frequent deposits, payments and transfers</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 5 ------------------------------------------------------------------>
+      <section class="step-panel" data-step="5" aria-labelledby="step5-title" hidden>
+        <div class="step-head">
+          <p class="step-count">Step 5 of 8</p>
+          <h2 id="step5-title" tabindex="-1">Tax &amp; Legal Information</h2>
+          <p class="step-sub">Provide your tax and legal information.</p>
+        </div>
+
+        <div class="field" data-field-group="tax.usResident">
+          <span class="field-label">Are you a U.S. tax resident? <span class="req">*</span></span>
+          <div class="radio-row">
+            <label class="radio-pill"><input type="radio" name="usResident" value="yes" data-model="tax.usResident"><span>Yes</span></label>
+            <label class="radio-pill"><input type="radio" name="usResident" value="no" data-model="tax.usResident"><span>No</span></label>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="field">
+            <label for="tinType">Taxpayer identification type <span class="req">*</span></label>
+            <select id="tinType" name="tinType" data-model="tax.tinType">
+              <option value="">Select type</option>
+              <option value="ssn">Social Security Number (SSN)</option>
+              <option value="itin">Individual Taxpayer Identification Number (ITIN)</option>
+              <option value="foreign">Foreign taxpayer identification number</option>
+            </select>
+          </div>
+          <div class="field" id="residency-country-field" hidden>
+            <label for="residencyCountry">Tax residency country <span class="req">*</span></label>
+            <select id="residencyCountry" name="residencyCountry" data-model="tax.residencyCountry">
+              <option value="">Select country</option>
+              <option>Canada</option>
+              <option>Mexico</option>
+              <option>United Kingdom</option>
+              <option>India</option>
+              <option>China</option>
+              <option>Japan</option>
+              <option>Germany</option>
+              <option>Australia</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="tax-doc" id="tax-doc-box">
+          <div class="tax-doc-head">
+            <span class="tax-doc-title">Applicable tax certification</span>
+            <span class="badge" id="tax-doc-badge">W-9</span>
+          </div>
+          <p id="tax-doc-text">U.S. persons generally complete IRS Form W-9 to certify their taxpayer identification number and tax status.</p>
+        </div>
+
+        <div class="check-list">
+          <label class="check-item">
+            <input type="checkbox" id="taxCert" data-model="tax.certification">
+            <span>I certify that the information provided is accurate and that I am the person named on this application.</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="taxDeclarations" data-model="tax.declarations">
+            <span>I acknowledge the legal declarations.</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP 6 ------------------------------------------------------------------>
+      <section class="step-panel" data-step="6" aria-labelledby="step6-title" hidden>
+        <div class="step-head">
+          <p class="step-count">Step 6 of 8</p>
+          <h2 id="step6-title" tabindex="-1">Review Your Application</h2>
+          <p class="step-sub">Check every section below. Use Edit to correct anything before you continue.</p>
+        </div>
+        <div id="review-body" class="review-list"></div>
+        <div class="notice notice-info">
+          You will not be able to submit until every section is complete.
+        </div>
+      </section>
+
+      <!-- STEP 7 ------------------------------------------------------------------>
+      <section class="step-panel" data-step="7" aria-labelledby="step7-title" hidden>
+        <div class="step-head">
+          <p class="step-count">Step 7 of 8</p>
+          <h2 id="step7-title" tabindex="-1">Review &amp; Accept Agreements</h2>
+          <p class="step-sub">Open and read each document, then acknowledge it.</p>
+        </div>
+
+        <div class="agreement-list" id="agreement-list">
+          <!-- built by app.js -->
+        </div>
+
+        <div class="signature-block">
+          <h3 class="sub-title">Electronic signature</h3>
+          <p class="hint">Type your full legal name to sign this application.</p>
+          <div class="field">
+            <label for="signature">Type your full name <span class="req">*</span></label>
+            <input id="signature" name="signature" type="text" data-model="agreements.signature" autocomplete="off" placeholder="e.g. Jordan A. Example">
+          </div>
+          <label class="check-item">
+            <input type="checkbox" id="esignConsent" data-model="agreements.consent">
+            <span>I agree to use electronic records and signatures for this application.</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- STEP 8 ------------------------------------------------------------------>
+      <section class="step-panel" data-step="8" aria-labelledby="step8-title" hidden>
+        <div id="decision-panel"></div>
+      </section>
+
+      <!-- SHARED ACTIONS ---------------------------------------------------------->
+      <div class="form-actions" id="form-actions">
+        <button type="button" class="btn btn-secondary" id="btn-back" hidden>Back</button>
+        <div class="actions-right">
+          <button type="button" class="btn btn-ghost" id="btn-save">Save &amp; continue later</button>
+          <button type="submit" class="btn btn-primary" id="btn-next">Continue</button>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <footer class="site-footer citi-footer">
+    <div class="footer-inner">
+      <nav class="footer-columns" aria-label="Footer navigation">
+        <div class="footer-col">
+          <h3 class="footer-col-title">Why Citi</h3>
+          <ul>
+            <li><a href="https://www.citigroup.com/citi/" target="_blank" rel="noopener">Our Story <span class="sr-only">Opens in new window</span></a></li>
+            <li><a href="https://jobs.citi.com/" target="_blank" rel="noopener">Careers <span class="sr-only">Opens in new window</span></a></li>
+            <li><a href="#">Benefits and Services</a></li>
+            <li><a href="#">Rewards</a></li>
+            <li><a href="#">Citi Entertainment<sup>&reg;</sup></a></li>
+            <li><a href="#">Special Offers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Wealth Management</h3>
+          <ul>
+            <li><a href="#">Citigold<sup>&reg;</sup> Private Client</a></li>
+            <li><a href="#">Citigold</a></li>
+            <li><a href="#">Citi Priority</a></li>
+            <li><a href="#">Citi Private Bank</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Business Banking</h3>
+          <ul>
+            <li><a href="#">Small Business Accounts</a></li>
+            <li><a href="#">Commercial Accounts</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Rates</h3>
+          <ul>
+            <li><a href="#">Personal Banking</a></li>
+            <li><a href="#">Credit Cards</a></li>
+            <li><a href="#">Mortgage</a></li>
+            <li><a href="#">Home Equity</a></li>
+            <li><a href="#">Personal Loans</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-col-title">Help &amp; Support</h3>
+          <ul>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Help &amp; FAQs</a></li>
+            <li><a href="#">Security Center</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="footer-social-bar">
+        <div class="footer-ehl">
+          <span class="ehl-icon" aria-hidden="true">&#127968;</span>
+          <span>Equal Housing Lender</span>
+        </div>
+        <div class="footer-social" aria-label="Social media">
+          <a href="https://www.facebook.com/citibank" target="_blank" rel="noopener" aria-label="Facebook">facebook</a>
+          <a href="https://twitter.com/Citibank/" target="_blank" rel="noopener" aria-label="Twitter">twitter</a>
+          <a href="https://www.youtube.com/citi" target="_blank" rel="noopener" aria-label="YouTube">youtube</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copyright">&copy; 2026 Citigroup Inc</p>
+      </div>
+
+      <div class="footer-disclosures">
+        <h3 class="disclosures-title">Important Legal Disclosures &amp; Information</h3>
+        <p>Citibank.com provides information about and access to accounts and financial services provided by Citibank, N.A. and its affiliates in the United States and its territories. It does not, and should not be construed as, an offer, invitation or solicitation of services to individuals outside of the United States.</p>
+        <p>Terms, conditions and fees for accounts, products, programs and services are subject to change. Not all accounts, products, and services as well as pricing described here are available in all jurisdictions or to all customers. Your eligibility for a particular product and service is subject to a final determination by Citibank. Your country of citizenship, domicile, or residence, if other than the United States, may have laws, rules, and regulations that govern or affect your application for and use of our accounts, products and services, including laws and regulations regarding taxes, exchange and/or capital controls that you are responsible for following.</p>
+        <p>The products, account packages, promotional offers and services described in this website may not apply to customers of International Personal Bank U.S. in the Citigold<sup>&reg;</sup> Private Client International, Citigold<sup>&reg;</sup> International, Citi International Personal, Citi Global Executive Preferred, and Citi Global Executive Account Packages.</p>
+        <p>Deposit products and services are offered by Citibank, N.A., Member FDIC</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="sr-only" id="live-region" aria-live="polite"></div>
+
+
+
+  <script src="/account-application/app.js" defer></script>
+</body>
+</html>
