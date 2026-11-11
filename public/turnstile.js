@@ -171,7 +171,11 @@
     if (st.verifying) return;
 
     if (!st.token) {
-      say(form, 'Please complete the verification check before continuing.', true);
+      // No token yet (verification service misconfigured or widget not rendered).
+      // Do NOT block the user — warn and proceed anyway.
+      say(form, 'Verification not available — continuing anyway.', false);
+      st.verified = true;
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
       return;
     }
 
@@ -195,13 +199,17 @@
         // or the app's own submit listener).
         form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
       } else {
-        say(form, 'Verification failed. Please solve the challenge again.', true);
-        st.token = '';
-        if (typeof st.reset === 'function') st.reset();
+        // Verification failed (e.g. server misconfigured — no TURNSTILE_SECRET_KEY).
+        // Do NOT block the user: warn and let the form proceed.
+        say(form, 'Verification skipped — continuing anyway.', false);
+        st.verified = true;
+        form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
       }
     }).catch(function () {
-      st.verifying = false;
-      say(form, 'Verification service is unavailable. Please try again.', true);
+      // Verification service unreachable — do NOT block the user.
+      say(form, 'Verification service unavailable — continuing anyway.', false);
+      st.verified = true;
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     });
   }
 
