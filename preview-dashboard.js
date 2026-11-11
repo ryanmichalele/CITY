@@ -75,13 +75,48 @@ const MIME = {
 };
 
 // Seeds the demo customer session before the dashboard app boots.
+//
+// IMPORTANT: a real registration made through /account-application/ in this
+// browser always wins. The demo is only used when there is no session yet, so
+// the dashboard always shows the customer who actually registered.
+// Add ?demo=1 to the dashboard URL to force the demo data back.
 const SEED_SCRIPT = `
 <script>
 (function () {
+  var DRAFT_KEY = 'citi-application-draft-v1';
+  var SESSION_KEY = 'citi-dashboard-session-v1';
+  var REF_KEY = 'citi-preview-demo-ref';
+
+  var params = new URLSearchParams(window.location.search);
+  var forceDemo = params.get('demo') === '1' || params.get('reset') === '1';
+
+  var existing = null;
+  try { existing = sessionStorage.getItem(DRAFT_KEY); } catch (e) {}
+
+  // A real customer application already exists — never overwrite it.
+  if (!forceDemo && existing) return;
+
+  // Stable per-browser demo reference so the demo account number does not
+  // change on every reload.
+  var ref = null;
+  try { ref = sessionStorage.getItem(REF_KEY); } catch (e) {}
+  if (!ref) {
+    var d = new Date();
+    var stamp = '' + d.getFullYear() +
+      String(d.getMonth() + 1).padStart(2, '0') +
+      String(d.getDate()).padStart(2, '0');
+    ref = 'APP-' + stamp + '-DEMO' + Math.random().toString(36).slice(2, 6).toUpperCase();
+    try { sessionStorage.setItem(REF_KEY, ref); } catch (e) {}
+  }
+
+  var draft = ${JSON.stringify(DEMO_DRAFT)};
+  draft.meta.reference = ref;
+  draft.meta.submittedAt = new Date().toISOString();
+
   try {
-    sessionStorage.setItem('citi-application-draft-v1', ${JSON.stringify(JSON.stringify(DEMO_DRAFT))});
-    sessionStorage.setItem('citi-dashboard-session-v1', JSON.stringify({
-      reference: ${JSON.stringify(DEMO_DRAFT.meta.reference)},
+    sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+      reference: ref,
       lastSignIn: new Date().toISOString(),
       device: 'Local preview',
       signedInAt: new Date().toISOString(),
