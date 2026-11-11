@@ -42,8 +42,17 @@ const DRAFT = {
   const page = await browser.newPage();
   await page.setViewport({ width: 1440, height: 900 });
   const errors = [];
-  page.on('pageerror', (e) => errors.push(String(e.message).slice(0, 160)));
-  page.on('console', (m) => { if (m.type() === 'error' && !/ERR_NAME_NOT_RESOLVED|MIME type|tagmanager/i.test(m.text())) errors.push('console: ' + m.text().slice(0, 160)); });
+  // Third-party noise seen across the whole mirror site (not dashboard code):
+  // the bank's analytics scripts log with a hidden font, Cloudflare probes for
+  // an optional Private Access Token, and some assets live on external hosts.
+  const NOISE = /ERR_NAME_NOT_RESOLVED|MIME type|tagmanager|font-size:0;color:transparent|challenges\.cloudflare\.com.*\/pat\/|net::ERR_FAILED/;
+  page.on('pageerror', (e) => { if (!NOISE.test(String(e.message))) errors.push(String(e.message).slice(0, 160)); });
+  page.on('console', (m) => { if (m.type() === 'error' && !NOISE.test(m.text())) errors.push('console: ' + m.text().slice(0, 160)); });
+  page.on('response', (r) => {
+    if (r.status() >= 400 && r.url().includes('city-bank-ca.netlify.app') && !NOISE.test(r.url())) {
+      errors.push('HTTP' + r.status() + ' ' + r.url().slice(0, 120));
+    }
+  });
 
   await page.evaluateOnNewDocument((draft) => {
     try { sessionStorage.setItem('citi-application-draft-v1', JSON.stringify(draft)); } catch (e) { /* */ }
