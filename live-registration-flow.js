@@ -27,9 +27,9 @@ const CUSTOMER = {
   industry: 'Information Technology',
   income: '$100,000',
   incomeSource: 'Salary / wages',
-  sourceFunds: 'Salary',
-  monthlyDeposits: '$2,500',
-  monthlyWithdrawals: '$1,000',
+  sourceFunds: 'Employment income',
+  monthlyDeposits: '$1,000 – $4,999',
+  monthlyWithdrawals: 'Less than $1,000',
   purpose: 'Saving',
   activity: 'Moderate',
   tinType: 'ssn',
@@ -49,17 +49,26 @@ async function setInput(page, sel, value) {
 }
 
 async function pickSelect(page, sel, textMatch) {
-  const ok = await page.evaluate((s, t) => {
+  const res = await page.evaluate((s, t) => {
     const el = document.querySelector(s);
-    if (!el) return false;
-    const opt = [...el.options].find((o) => (o.textContent || '').toLowerCase().includes(t.toLowerCase()));
-    if (!opt) return false;
+    if (!el) return { ok: false, options: [], why: 'no element' };
+    const tl = t.toLowerCase();
+    // 1) exact value match  2) option text contains match
+    let opt = [...el.options].find((o) => o.value === t);
+    if (!opt) opt = [...el.options].find((o) => (o.textContent || '').toLowerCase().trim() === tl);
+    if (!opt) opt = [...el.options].find((o) => (o.textContent || '').toLowerCase().includes(tl));
+    if (!opt) {
+      return { ok: false, options: [...el.options].map((o) => o.value + '|' + (o.textContent || '').trim()), why: 'no match' };
+    }
     el.value = opt.value;
     el.dispatchEvent(new Event('change', { bubbles: true }));
-    return true;
+    return { ok: true, picked: opt.value, options: [] };
   }, sel, textMatch);
-  if (!ok) console.log(`  ! could not pick "${textMatch}" in ${sel}`);
-  return ok;
+  if (!res.ok) {
+    console.log(`  ! could not pick "${textMatch}" in ${sel} (${res.why})`);
+    console.log('     options:', JSON.stringify(res.options));
+  }
+  return res.ok;
 }
 
 async function pickRadio(page, name, value) {
@@ -170,6 +179,12 @@ async function clickNext(page) {
 
   console.log('--- STEP 7: agreements + submit ---');
   await setInput(page, '#signature', CUSTOMER.signature);
+  const agreementIds = await page.evaluate(() => {
+    const boxes = [...document.querySelectorAll('input[data-agreement]')];
+    boxes.forEach((b) => { if (!b.checked) { b.checked = true; b.dispatchEvent(new Event('change', { bubbles: true })); } });
+    return boxes.map((b) => b.getAttribute('data-agreement'));
+  });
+  console.log('  agreements checked:', JSON.stringify(agreementIds));
   await check(page, '#esignConsent');
   await clickNext(page);
   console.log('  step now:', await currentStep(page));
