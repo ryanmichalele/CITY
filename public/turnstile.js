@@ -283,7 +283,10 @@
 
   function scan() {
     var forms = findForms(document);
-    for (var i = 0; i < forms.length; i++) attachForm(forms[i]);
+    for (var i = 0; i < forms.length; i++) {
+      if (forms[i].id === 'app-form') continue; // account application manages Turnstile manually
+      attachForm(forms[i]);
+    }
     attachStandalone();
   }
 
@@ -303,7 +306,10 @@
           var added = mutations[i].addedNodes;
           for (var j = 0; j < added.length; j++) {
             var forms = findForms(added[j]);
-            for (var k = 0; k < forms.length; k++) attachForm(forms[k]);
+            for (var k = 0; k < forms.length; k++) {
+              if (forms[k].id === 'app-form') continue;
+              attachForm(forms[k]);
+            }
           }
         }
         ensureHead();

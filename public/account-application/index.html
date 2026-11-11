@@ -179,6 +179,10 @@
             <label for="email">Email address <span class="req">*</span></label>
             <input id="email" name="email" type="email" data-model="contact.email" autocomplete="email" placeholder="name@example.com">
           </div>
+          <div class="field">
+            <label for="phone">Mobile phone <span class="req">*</span></label>
+            <input id="phone" name="phone" type="tel" data-model="contact.phone" inputmode="tel" autocomplete="tel" placeholder="(555) 000-0000">
+          </div>
         </div>
         <div class="grid grid-2">
           <div class="field">
@@ -275,6 +279,9 @@
           </div>
         </div>
       </section>
+
+      <!-- TURNSTILE WIDGET FOR STEP 3 -->
+      <div class="cf-turnstile-host" id="turnstile-host-step3" hidden></div>
 
       <!-- STEP 4 ------------------------------------------------------------------>
       <section class="step-panel" data-step="4" aria-labelledby="step4-title" hidden>

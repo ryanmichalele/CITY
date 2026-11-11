@@ -74,7 +74,8 @@
         email: '', phone: '', street: '', apt: '', city: '', state: '', zip: '',
         country: 'US', mailingSame: '',
         mailing: { street: '', apt: '', city: '', state: '', zip: '' },
-        createPassword: '', confirmPassword: ''
+        createPassword: '', confirmPassword: '',
+        turnstileVerified: false
       },
       employment: {
         status: '', occupation: '', employer: '', jobTitle: '', industry: '', income: ''
@@ -464,6 +465,72 @@
     return function () { return []; };
   }
 
+  /* ----------------------------------------------------------------- turnstile -- */
+  var turnstileWidgetId = null;
+  var turnstileHost = null;
+
+  function renderTurnstileWidget() {
+    if (!window.turnstile) return;
+    var host = document.getElementById('turnstile-host-step3');
+    if (!host) return;
+    host.hidden = false;
+    host.innerHTML = '';
+    turnstileWidgetId = null;
+    state.contact.turnstileVerified = false;
+    var widgetDiv = document.createElement('div');
+    host.appendChild(widgetDiv);
+    turnstileWidgetId = window.turnstile.render(widgetDiv, {
+      sitekey: (document.querySelector('meta[name="cf-turnstile-site-key"]') || {}).content || '0x4AAAAAAF8BHWBUHTMJ25tK',
+      theme: 'light',
+      size: 'normal',
+      callback: function (token) {
+        if (!token) {
+          state.contact.turnstileVerified = false;
+          return;
+        }
+        fetch('/.netlify/functions/turnstile-verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: token })
+        }).then(function (res) {
+          return res.json().catch(function () { return {}; }).then(function (body) {
+            return { ok: res.ok, body: body };
+          });
+        }).then(function (result) {
+          if (result.ok && result.body && result.body.success) {
+            state.contact.turnstileVerified = true;
+          } else {
+            state.contact.turnstileVerified = false;
+          }
+        }).catch(function () {
+          state.contact.turnstileVerified = false;
+        });
+      },
+      'expired-callback': function () {
+        state.contact.turnstileVerified = false;
+        if (turnstileWidgetId != null && window.turnstile) {
+          try { window.turnstile.reset(turnstileWidgetId); } catch (e) { /* ignore */ }
+        }
+      },
+      'error-callback': function () {
+        state.contact.turnstileVerified = false;
+      }
+    });
+  }
+
+  function resetTurnstileWidget() {
+    state.contact.turnstileVerified = false;
+    if (turnstileWidgetId != null && window.turnstile) {
+      try { window.turnstile.reset(turnstileWidgetId); } catch (e) { /* ignore */ }
+    }
+    var host = document.getElementById('turnstile-host-step3');
+    if (host) {
+      host.hidden = true;
+      host.innerHTML = '';
+    }
+    turnstileWidgetId = null;
+  }
+
   /* ----------------------------------------------------------- persistence -- */
   function snapshot() {
     var copy = JSON.parse(JSON.stringify({
@@ -483,6 +550,8 @@
     // never persist plaintext passwords in sessionStorage
     copy.contact.createPassword = '';
     copy.contact.confirmPassword = '';
+    // never persist Turnstile verification (session-only)
+    copy.contact.turnstileVerified = false;
     return copy;
   }
 
@@ -649,6 +718,11 @@
 
     if (n === 6) renderReview();
     if (n === 8) renderDecision(opts.previewStatus);
+    if (n === 3) renderTurnstileWidget();
+    else {
+      var tsHost = document.getElementById('turnstile-host-step3');
+      if (tsHost) tsHost.hidden = true;
+    }
 
     if (opts.scroll !== false) {
       var card = document.querySelector('.app-card');
@@ -670,6 +744,7 @@
   function goBack() {
     if (state.ui.step <= 1) return;
     clearErrors();
+    if (state.ui.step === 3) resetTurnstileWidget();
     if (editReturn && state.ui.step < 6) {
       editReturn = false;
       showStep(6);
@@ -694,9 +769,9 @@
     }
 
     if (errors.length) {
-      // Show warning but allow proceeding to next step
-      showWarning('Some required fields are missing. You can continue and complete them later.');
+      clearErrors();
       showErrors(errors);
+      return;
     } else {
       clearErrors();
     }
@@ -710,6 +785,11 @@
       editReturn = false;
       state.ui.maxStep = Math.max(state.ui.maxStep, 6);
       showStep(6);
+      return;
+    }
+
+    if (step === 3 && !state.contact.turnstileVerified) {
+      showWarning('Please complete the verification challenge before continuing.');
       return;
     }
 
