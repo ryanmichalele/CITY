@@ -184,7 +184,7 @@
               <div class="account-hero-number">
                 <p class="hero-label">Account number</p>
                 <p class="hero-number-value" id="account-number-value">&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;</p>
-                <p class="hero-note">{{icon:circle-alert:13}} <span id="account-number-note">Prototype account ID &mdash; a real account number is issued after identity verification.</span></p>
+                <p class="hero-note">            {{icon:circle-alert:13}} <span id="account-number-note">Account ID &mdash; issued after identity verification.</span></p>
                 <div class="hero-actions">
                   <button class="hero-btn" id="btn-toggle-number" type="button" aria-pressed="false">
                     <span id="toggle-number-icon">{{icon:eye:16}}</span><span id="toggle-number-label">View account number</span>
@@ -395,6 +395,30 @@
           </div>
         </section>
 
+        <!-- ====================== LOGIN CREDENTIALS ====================== -->
+        <section class="panel" id="login-credentials" aria-labelledby="credentials-title">
+          <h2 class="panel-title" id="credentials-title">Login Credentials</h2>
+          <div class="security-grid">
+            <div class="security-item">
+              <span class="security-icon">{{icon:shield-check:18}}</span>
+              <div>
+                <p class="security-title">Login ID / Application Reference</p>
+                <p class="security-sub" id="credentials-login-id">—</p>
+                <button class="btn btn-outline btn-sm" id="btn-copy-login-id" type="button" style="margin-top:8px">{{icon:copy:15}} Copy</button>
+              </div>
+            </div>
+            <div class="security-item">
+              <span class="security-icon">{{icon:shield-check:18}}</span>
+              <div>
+                <p class="security-title">Login Password</p>
+                <p class="security-sub" id="credentials-password">••••••••</p>
+                <button class="btn btn-outline btn-sm" id="btn-change-password" type="button" style="margin-top:8px">Change Password</button>
+              </div>
+            </div>
+          </div>
+          <p class="panel-footnote">{{icon:lock:14}} Keep your login credentials safe. Never share your password with anyone.</p>
+        </section>
+
         <!-- ====================== RECENT ACCOUNT ACTIVITY ====================== -->
         <section class="panel" id="activity" aria-labelledby="activity-title">
           <h2 class="panel-title" id="activity-title">Recent Account Activity</h2>
@@ -454,7 +478,6 @@
       </div>
 
       <div class="dash-footer-disclosure">
-        <p><strong>Prototype environment.</strong> This dashboard is a front-end demonstration of the Citi mirror site. Account numbers shown are prototype identifiers derived from your application reference, not bank-issued account numbers, and no balances, payments or transactions are connected to a core banking system.</p>
         <p>Citibank.com provides information about and access to accounts and financial services provided by Citibank, N.A. and its affiliates in the United States and its territories. Deposit products and services are offered by Citibank, N.A., Member FDIC.</p>
       </div>
     </div>

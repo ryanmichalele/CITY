@@ -1,7 +1,5 @@
 /* ============================================================================
    Citi account application
-   No network requests, no backend, no database, no real account creation.
-   Sensitive values (full SSN/ITIN, signature) are never persisted.
    ========================================================================== */
 (function () {
   'use strict';
@@ -75,7 +73,8 @@
       contact: {
         email: '', phone: '', street: '', apt: '', city: '', state: '', zip: '',
         country: 'US', mailingSame: '',
-        mailing: { street: '', apt: '', city: '', state: '', zip: '' }
+        mailing: { street: '', apt: '', city: '', state: '', zip: '' },
+        createPassword: '', confirmPassword: ''
       },
       employment: {
         status: '', occupation: '', employer: '', jobTitle: '', industry: '', income: ''
@@ -89,13 +88,14 @@
         certification: false, declarations: false
       },
       agreements: { accepted: {}, signature: '', consent: false, acceptedAt: null, docVersion: DOC_VERSION },
-      meta: { submitted: false, status: '', reference: '', submittedAt: '' },
+      meta: { submitted: false, status: '', reference: '', submittedAt: '', passwordHash: '' },
       ui: { step: 1, maxStep: 1 }
     };
-  }
+  };
 
   var state = blankState();
   var fullSsn = '';            // memory only — never persisted
+  var plainPassword = '';      // memory only — never persisted, shown once on step 8
   var submitting = false;
   var persistTimer = null;
   var editReturn = false;       // true when a Review "Edit" sent the user back
@@ -199,6 +199,49 @@
       String(now.getDate()).padStart(2, '0');
     var rand = Math.random().toString(36).slice(2, 8).toUpperCase();
     return 'APP-' + stamp + '-' + rand;
+  }
+
+  async function hashPassword(password) {
+    var encoder = new TextEncoder();
+    var data = encoder.encode(password);
+    var hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    var hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+  }
+
+  function passwordStrength(password) {
+    var score = 0;
+    if (password.length >= 8) score++;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+    if (/\d/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+    return score; // 0-4
+  }
+
+  function updatePasswordStrength(value) {
+    var el = $('#password-strength-value');
+    if (!el) return;
+    var score = passwordStrength(value);
+    var labels = ['—', 'Weak', 'Fair', 'Good', 'Strong'];
+    var colors = ['#999', '#d9534f', '#f0ad4e', '#5bc0de', '#5cb85c'];
+    el.textContent = value ? labels[score] : '—';
+    el.style.color = value ? colors[score] : '#999';
+  }
+
+  function updatePasswordMatchHint() {
+    var hint = $('#password-match-hint');
+    var cp = $('#createPassword');
+    var conf = $('#confirmPassword');
+    if (!hint || !cp || !conf) return;
+    if (conf.value && cp.value && cp.value !== conf.value) {
+      hint.style.display = 'block';
+    } else {
+      hint.style.display = 'none';
+    }
+  }
+
+  function maskPassword(password) {
+    return '•'.repeat(password.length);
   }
 
   function formatDate(iso) {
@@ -316,6 +359,23 @@
     if (!c.country) errs.push({ el: $('#country'), msg: 'Select your country.' });
     if (!c.mailingSame) errs.push({ el: $('input[name="mailingSame"]'), msg: 'Tell us whether your mailing address is the same.' });
 
+    // Password validation
+    var cp = val(c.createPassword);
+    var conf = val(c.confirmPassword);
+    if (!cp) {
+      errs.push({ el: $('#createPassword'), msg: 'Create a password.' });
+    } else {
+      var strength = passwordStrength(cp);
+      if (strength < 2) {
+        errs.push({ el: $('#createPassword'), msg: 'Password is too weak. Use a mix of letters, numbers, and symbols.' });
+      }
+    }
+    if (!conf) {
+      errs.push({ el: $('#confirmPassword'), msg: 'Confirm your password.' });
+    } else if (cp && conf && cp !== conf) {
+      errs.push({ el: $('#confirmPassword'), msg: 'Passwords do not match.' });
+    }
+
     if (c.mailingSame === 'no') {
       if (!val(c.mailing.street).trim()) errs.push({ el: $('#mailStreet'), msg: 'Enter the mailing street address.' });
       if (!val(c.mailing.city).trim()) errs.push({ el: $('#mailCity'), msg: 'Enter the mailing city.' });
@@ -413,6 +473,9 @@
     // never persist the typed signature or anything derived from the full SSN
     copy.agreements.signature = '';
     copy.personal.ssnLast4 = state.personal.ssnLast4;
+    // never persist plaintext passwords in sessionStorage
+    copy.contact.createPassword = '';
+    copy.contact.confirmPassword = '';
     return copy;
   }
 
@@ -608,7 +671,7 @@
     showStep(state.ui.step - 1);
   }
 
-  function continueFromCurrent() {
+  async function continueFromCurrent() {
     if (submitting) return;
     var step = state.ui.step;
     if (step === 8) return;
@@ -630,7 +693,7 @@
     clearErrors();
 
     if (step === 7) {
-      submitApplication();
+      await submitApplication();
       return;
     }
 
@@ -873,12 +936,21 @@
             '<li>Review your approval and account documents.</li>' +
             '<li>Complete identity verification if additional information is requested.</li>' +
             '<li>Fund the account using your preferred method.</li>' +
-            '<li>Set up online access and alerts when your account is ready.</li>' +
+            '<li>Use your Login ID and password below to sign in to your dashboard.</li>' +
           '</ul>' +
         '</div>' +
         '<div class="decision-card">' +
           '<h3>Account activation information</h3>' +
           '<p>Your account is ready. Continue to your dashboard to view account details and activity.</p>' +
+        '</div>' +
+        '<div class="decision-card decision-card--credentials">' +
+          '<h3>Your Login Credentials (shown once)</h3>' +
+          '<p><strong>Login ID / Application Reference:</strong> <span id="cred-login-id">' + ref + '</span></p>' +
+          '<p><strong>Login Password:</strong> ' +
+          '<span id="cred-password-display">' + (plainPassword ? maskPassword(plainPassword) : '—') + '</span> ' +
+          '<button type="button" class="btn btn-sm btn-outline" id="toggle-cred-password" style="margin-left:8px;">Show</button>' +
+          '</p>' +
+          '<p class="hint">Save your Login ID and password. You will need them to sign in to your dashboard after you log out. Your password is shown only once and is never displayed again.</p>' +
         '</div>' +
         '<div class="decision-action">' +
           '<button type="button" class="btn btn-primary" id="go-to-dashboard">Go to Your Dashboard</button>' +
@@ -936,9 +1008,23 @@
         decisionBody(status) +
 
       '</div>';
+
+    // Wire up the one-time password reveal toggle on the approval page
+    var toggleCred = document.getElementById('toggle-cred-password');
+    var credDisplay = document.getElementById('cred-password-display');
+    if (toggleCred && credDisplay && plainPassword) {
+      var revealed = false;
+      toggleCred.addEventListener('click', function () {
+        revealed = !revealed;
+        credDisplay.textContent = revealed ? plainPassword : maskPassword(plainPassword);
+        toggleCred.textContent = revealed ? 'Hide' : 'Show';
+        toggleCred.setAttribute('aria-pressed', revealed ? 'true' : 'false');
+        toggleCred.setAttribute('aria-label', revealed ? 'Hide password' : 'Show password');
+      });
+    }
   }
 
-  function submitApplication() {
+  async function submitApplication() {
     if (submitting || state.meta.submitted) {
       if (state.meta.submitted) showStep(8);
       return;
@@ -948,7 +1034,7 @@
     btnNext.disabled = true;
     announce('Submitting your application.');
 
-    setTimeout(function () {
+    setTimeout(async function () {
       state.meta.submitted = true;
       state.meta.status = 'approved';
       state.meta.reference = makeReference();
@@ -956,6 +1042,14 @@
       state.agreements.acceptedAt = state.meta.submittedAt;
       state.agreements.docVersion = DOC_VERSION;
       state.ui.maxStep = 8;
+
+      // Hash the customer-created password (client-side prototype only — not production-grade)
+      var cp = val(state.contact.createPassword);
+      if (cp) {
+        state.meta.passwordHash = await hashPassword(cp);
+        plainPassword = cp; // memory only — shown once on step 8, never persisted
+      }
+
       submitting = false;
       btnNext.classList.remove('loading');
       persistDraft();
@@ -1054,6 +1148,12 @@
           persistSoon();
         } else {
           applyModel(el);
+          if (el.id === 'createPassword') {
+            updatePasswordStrength(el.value);
+          }
+          if (el.id === 'confirmPassword') {
+            updatePasswordMatchHint();
+          }
         }
       }
     });
@@ -1100,6 +1200,27 @@
       toggleSsn.setAttribute('aria-pressed', show ? 'true' : 'false');
       toggleSsn.setAttribute('aria-label', show ? 'Hide SSN or ITIN' : 'Show SSN or ITIN');
     });
+
+    var toggleCreate = document.getElementById('toggle-create-password');
+    var toggleConfirm = document.getElementById('toggle-confirm-password');
+    if (toggleCreate) {
+      toggleCreate.addEventListener('click', function () {
+        var show = document.getElementById('createPassword').type === 'password';
+        document.getElementById('createPassword').type = show ? 'text' : 'password';
+        toggleCreate.textContent = show ? 'Hide' : 'Show';
+        toggleCreate.setAttribute('aria-pressed', show ? 'true' : 'false');
+        toggleCreate.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+      });
+    }
+    if (toggleConfirm) {
+      toggleConfirm.addEventListener('click', function () {
+        var show = document.getElementById('confirmPassword').type === 'password';
+        document.getElementById('confirmPassword').type = show ? 'text' : 'password';
+        toggleConfirm.textContent = show ? 'Hide' : 'Show';
+        toggleConfirm.setAttribute('aria-pressed', show ? 'true' : 'false');
+        toggleConfirm.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+      });
+    }
 
     stepper.addEventListener('click', function (event) {
       var li = event.target.closest('li');

@@ -179,9 +179,23 @@
             <label for="email">Email address <span class="req">*</span></label>
             <input id="email" name="email" type="email" data-model="contact.email" autocomplete="email" placeholder="name@example.com">
           </div>
+        </div>
+        <div class="grid grid-2">
           <div class="field">
-            <label for="phone">Mobile phone number <span class="req">*</span></label>
-            <input id="phone" name="phone" type="tel" data-model="contact.phone" autocomplete="tel" inputmode="tel" placeholder="(555) 123-4567">
+            <label for="createPassword">Create password <span class="req">*</span></label>
+            <div class="input-with-action">
+              <input id="createPassword" name="createPassword" type="password" data-model="contact.createPassword" autocomplete="new-password" placeholder="••••••••">
+              <button type="button" class="reveal-btn" id="toggle-create-password" aria-label="Show password" aria-pressed="false">Show</button>
+            </div>
+            <p class="hint" id="password-strength">Password strength: <span id="password-strength-value">—</span></p>
+          </div>
+          <div class="field">
+            <label for="confirmPassword">Confirm password <span class="req">*</span></label>
+            <div class="input-with-action">
+              <input id="confirmPassword" name="confirmPassword" type="password" data-model="contact.confirmPassword" autocomplete="new-password" placeholder="••••••••">
+              <button type="button" class="reveal-btn" id="toggle-confirm-password" aria-label="Show password" aria-pressed="false">Show</button>
+            </div>
+            <p class="hint" id="password-match-hint" style="display:none; color:#c00;">Passwords do not match.</p>
           </div>
         </div>
 

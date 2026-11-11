@@ -2,9 +2,8 @@
  * Citi Online Banking — customer dashboard
  *
  * Data source
- *   The application is front-end only (no core banking backend). The only
- *   authoritative record of a customer is the application they submitted,
- *   stored in sessionStorage by /account-application/app.js:
+ *   The only authoritative record of a customer is the application they
+ *   submitted, stored in sessionStorage by /account-application/app.js:
  *     citi-application-draft-v1   the submitted application (identity source)
  *
  *   This dashboard never reads a customer identifier from the URL and never
@@ -147,6 +146,7 @@
       mailingAddress: [mailing, cityLine].filter(Boolean).join(', '),
       accountType: accountType,
       accountTypeLabel: ACCOUNT_TYPE_LABELS[accountType] || 'Deposit Account',
+      passwordHash: meta.passwordHash || '',
       accountStatus: accountStatus,
       prototypeId: prototypeId,
       maskedId: '•••• •••• •••• ' + last4,
@@ -538,6 +538,69 @@
     setText('#security-lastsignin', session.firstSignIn ? 'First sign-in just now' : formatDateTime(session.lastSignIn));
   }
 
+  /* ---------------------------------------------------------- credentials -- */
+  function renderCredentials(session) {
+    setText('#credentials-login-id', session.applicationReference || '—');
+    var hasPassword = !!session.passwordHash;
+    var pwdEl = $('#credentials-password');
+    if (pwdEl) {
+      pwdEl.textContent = hasPassword ? '••••••••' : 'Not set';
+    }
+    var changeBtn = $('#btn-change-password');
+    if (changeBtn) changeBtn.hidden = !hasPassword;
+  }
+
+  function setupCredentials() {
+    var copyBtn = $('#btn-copy-login-id');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function () {
+        var ref = $('#credentials-login-id');
+        if (ref && ref.textContent && ref.textContent !== '—') {
+          copyText(ref.textContent, 'Login ID copied to clipboard');
+        }
+      });
+    }
+
+    var changeBtn = $('#btn-change-password');
+    if (changeBtn) {
+      changeBtn.addEventListener('click', async function () {
+        var newPwd = prompt('Enter your new password:');
+        if (!newPwd) return;
+        if (newPwd.length < 8) {
+          alert('Password must be at least 8 characters.');
+          return;
+        }
+        var confirmPwd = prompt('Confirm your new password:');
+        if (newPwd !== confirmPwd) {
+          alert('Passwords do not match.');
+          return;
+        }
+        // Update the hashed password in the session draft (client-side prototype only)
+        try {
+          var raw = sessionStorage.getItem(DRAFT_KEY);
+          if (raw) {
+            var draft = JSON.parse(raw);
+            if (draft && draft.meta) {
+              draft.meta.passwordHash = await sha256Hex(newPwd);
+              sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+              currentSession.passwordHash = draft.meta.passwordHash;
+              renderCredentials(currentSession);
+              alert('Password changed successfully.');
+            }
+          }
+        } catch (e) {
+          alert('Could not change password.');
+        }
+      });
+    }
+  }
+
+  function sha256Hex(value) {
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)).then(function (buf) {
+      return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+    });
+  }
+
   /* --------------------------------------------------------------- number -- */
   var numberVisible = false;
 
@@ -850,6 +913,7 @@
     renderActivity(currentSession);
     renderNotifications(currentSession);
     renderSecurity(currentSession);
+    renderCredentials(currentSession);
     applyNumberVisibility();
 
     setupNav();
@@ -857,6 +921,7 @@
     setupMobile();
     setupSignOut();
     setupTurnstileStatus(currentSession);
+    setupCredentials();
 
     // Account number visibility
     var toggle = $('#btn-toggle-number');
