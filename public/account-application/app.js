@@ -395,6 +395,13 @@
 
     if (['employed', 'self-employed', 'business-owner'].indexOf(e.status) !== -1) {
       if (!val(e.employer).trim()) errs.push({ el: $('#employer'), msg: 'Enter your employer or business name.' });
+  function showWarning(message) {
+    if (!toastEl) return;
+    toastEl.textContent = message;
+    toastEl.className = 'show warning';
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () { toastEl.className = ''; }, 5000);
+  }
       if (!val(e.jobTitle).trim()) errs.push({ el: $('#jobTitle'), msg: 'Enter your job title.' });
       if (!e.industry) errs.push({ el: $('#industry'), msg: 'Select your industry.' });
       if (!e.income) errs.push({ el: $('#income'), msg: 'Select your annual income range.' });
@@ -687,10 +694,12 @@
     }
 
     if (errors.length) {
+      // Show warning but allow proceeding to next step
+      showWarning('Some required fields are missing. You can continue and complete them later.');
       showErrors(errors);
-      return;
+    } else {
+      clearErrors();
     }
-    clearErrors();
 
     if (step === 7) {
       await submitApplication();
