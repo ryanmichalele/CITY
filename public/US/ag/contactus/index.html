@@ -217,6 +217,7 @@
 body.cds-modal-open{overflow:auto!important}
 </style>
 
+  <script src="/mirror-links.js" defer></script>
 </head>
 
 <body>
@@ -279,56 +280,4 @@ body.cds-modal-open{overflow:auto!important}
 })();
 </script>
 
-<script id="mirror-account-application-bridge">
-(function () {
-  var TARGET = '/account-application/';
-  function classify(el) {
-    if (!el) return null;
-    var id = el.id || '';
-    if (id === 'register_acc') return 'register';
-    if (id === 'activate_card') return 'activate';
-
-    var href = el.getAttribute ? (el.getAttribute('href') || '') : '';
-    if (/registration\/set-up-online-access/i.test(href)) return 'register';
-    if (/\/US\/ag\/activate(\/|$|\?)/i.test(href)) return 'activate';
-
-    var text = (el.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
-    if (/^register( now| for online access)?$/.test(text)) return 'register';
-    if (/^(activate|activate a card|activate account|activate your account)$/.test(text)) return 'activate';
-    return null;
-  }
-
-  function targetUrl(mode) {
-    return TARGET + '?mode=' + (mode === 'activate' ? 'activate' : 'register');
-  }
-
-  document.addEventListener('click', function (event) {
-    var el = event.target && event.target.closest ? event.target.closest('a, button') : null;
-    var mode = classify(el);
-    if (!mode) return;
-    event.preventDefault();
-    event.stopPropagation();
-    if (event.stopImmediatePropagation) event.stopImmediatePropagation();
-    window.location.assign(targetUrl(mode));
-  }, true);
-
-  function rewrite() {
-    var anchors = document.querySelectorAll('a');
-    for (var i = 0; i < anchors.length; i++) {
-      var a = anchors[i];
-      var mode = classify(a);
-      if (!mode) continue;
-      var url = targetUrl(mode);
-      if (a.getAttribute('href') !== url) a.setAttribute('href', url);
-    }
-  }
-
-  rewrite();
-  if (window.MutationObserver) {
-    new MutationObserver(rewrite).observe(document.documentElement, {
-      subtree: true, childList: true, attributes: true, attributeFilter: ['href', 'id']
-    });
-  }
-})();
-</script>
 </body></html>
