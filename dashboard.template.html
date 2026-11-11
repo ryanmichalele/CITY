@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Online Banking Dashboard | Citi</title>
+  <meta name="description" content="Your Citi account summary, balances, transactions and account details.">
+  <meta name="cf-turnstile-site-key" content="0x4AAAAAAF8BHWBUHTMJ25tK">
+  <link rel="icon" href="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg" type="image/svg+xml">
+  <link rel="preload" href="/dashboard/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/dashboard/fonts/inter.css">
+  <link rel="stylesheet" href="/dashboard/dashboard.css">
+  <link rel="stylesheet" href="/turnstile.css">
+  <script src="/turnstile.js" defer></script>
+</head>
+<body class="dash-body">
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ============================ TOP NAVIGATION ============================ -->
+  <header class="topnav" id="topnav">
+    <div class="topnav-inner">
+      <a class="topnav-brand" href="/" aria-label="Citi home">
+        <img src="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg" alt="Citi" width="88" height="88">
+      </a>
+
+      <nav class="topnav-main" id="topnav-main" aria-label="Main navigation">
+        <a class="topnav-link is-active" href="#overview" data-nav="overview">Accounts</a>
+        <a class="topnav-link" href="#payments" data-nav="payments">Payments &amp; Transfers</a>
+        <a class="topnav-link" href="#services" data-nav="services">Services</a>
+        <a class="topnav-link" href="#statements" data-nav="statements">Statements</a>
+        <a class="topnav-link" href="#products" data-nav="products">Explore Products</a>
+        <a class="topnav-link topnav-link--cta" href="/account-application/">Open an Account</a>
+      </nav>
+
+      <div class="topnav-actions">
+        <button class="icon-btn" id="btn-search" type="button" aria-label="Search" aria-haspopup="dialog">
+          {{icon:search:20}}
+        </button>
+        <a class="icon-btn" href="#support" aria-label="Help Center">{{icon:circle-help:20}}</a>
+
+        <div class="menu-wrap">
+          <button class="icon-btn icon-btn--badge" id="btn-notifications" type="button" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
+            {{icon:bell:20}}
+            <span class="icon-badge" id="notification-badge" hidden>0</span>
+          </button>
+          <div class="dropdown dropdown--notifications" id="menu-notifications" role="menu" hidden>
+            <p class="dropdown-title">Notifications</p>
+            <ul class="dropdown-list" id="notification-list"></ul>
+            <p class="dropdown-empty" id="notification-empty" hidden>You're all caught up.</p>
+          </div>
+        </div>
+
+        <div class="menu-wrap">
+          <button class="profile-btn" id="btn-profile" type="button" aria-haspopup="true" aria-expanded="false">
+            <span class="avatar" id="profile-initials" aria-hidden="true">--</span>
+            <span class="profile-text">
+              <span class="profile-name" id="profile-name">Signed in</span>
+            </span>
+            {{icon:chevron-down:16}}
+          </button>
+          <div class="dropdown dropdown--profile" id="menu-profile" role="menu" hidden>
+            <div class="dropdown-head">
+              <p class="dropdown-name" id="dropdown-name">—</p>
+              <p class="dropdown-email" id="dropdown-email">—</p>
+            </div>
+            <a class="dropdown-item" href="#details" role="menuitem">{{icon:landmark:16}} Account details</a>
+            <a class="dropdown-item" href="#security" role="menuitem">{{icon:shield-check:16}} Security settings</a>
+            <a class="dropdown-item" href="#support" role="menuitem">{{icon:headset:16}} Help &amp; support</a>
+            <button class="dropdown-item dropdown-item--danger" id="dropdown-signout" type="button" role="menuitem">
+              {{icon:log-out:16}} Sign out
+            </button>
+          </div>
+        </div>
+
+        <button class="icon-btn topnav-burger" id="btn-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="topnav-mobile">
+          {{icon:menu:22}}
+        </button>
+      </div>
+    </div>
+
+    <div class="topnav-mobile" id="topnav-mobile" hidden>
+      <nav class="topnav-mobile-nav" aria-label="Mobile navigation">
+        <a class="topnav-mobile-link is-active" href="#overview" data-nav="overview">Accounts</a>
+        <a class="topnav-mobile-link" href="#payments" data-nav="payments">Payments &amp; Transfers</a>
+        <a class="topnav-mobile-link" href="#services" data-nav="services">Services</a>
+        <a class="topnav-mobile-link" href="#statements" data-nav="statements">Statements</a>
+        <a class="topnav-mobile-link" href="#products" data-nav="products">Explore Products</a>
+        <a class="topnav-mobile-link" href="#support" data-nav="support">Help &amp; Support</a>
+        <a class="topnav-mobile-link" href="/account-application/">Open an Account</a>
+      </nav>
+      <div class="topnav-mobile-foot">
+        <p class="topnav-mobile-user" id="mobile-user">—</p>
+        <button class="btn btn-outline btn-block" id="mobile-signout" type="button">{{icon:log-out:16}} Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================ DASHBOARD ============================ -->
+  <main id="main" class="dash" tabindex="-1">
+
+    <!-- Loading state -->
+    <div class="dash-loading" id="dash-loading" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <p class="dash-loading-text">Loading your account&hellip;</p>
+    </div>
+
+    <!-- Error state -->
+    <div class="dash-error" id="dash-error" role="alert" hidden>
+      <div class="dash-error-inner">
+        {{icon:circle-alert:32}}
+        <h1 class="dash-error-title">We couldn't load your account</h1>
+        <p class="dash-error-msg" id="dash-error-msg">Your session could not be verified. Please sign in again.</p>
+        <div class="dash-error-actions">
+          <button class="btn btn-primary" id="error-retry" type="button">Try again</button>
+          <a class="btn btn-outline" href="/account-application/">Return to account opening</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-shell" id="dash-shell" hidden>
+      <!-- ============================ SIDEBAR ============================ -->
+      <aside class="dash-sidebar" id="dash-sidebar" aria-label="Account summary and services">
+        <div class="sidebar-card">
+          <div class="sidebar-block">
+            <h2 class="sidebar-title">Account Summary</h2>
+            <p class="sidebar-amount" id="sb-available">&mdash;</p>
+            <p class="sidebar-label">Available balance</p>
+            <p class="sidebar-account" id="sb-account">&mdash;</p>
+          </div>
+
+          <div class="sidebar-block">
+            <h3 class="sidebar-subtitle">My Accounts</h3>
+            <ul class="sidebar-list" id="sidebar-accounts"></ul>
+            <p class="sidebar-empty" id="sidebar-accounts-empty" hidden>No accounts yet.</p>
+          </div>
+
+          <div class="sidebar-block">
+            <h3 class="sidebar-subtitle">Recent Activity</h3>
+            <ul class="sidebar-list sidebar-list--activity" id="sidebar-activity"></ul>
+            <p class="sidebar-empty" id="sidebar-activity-empty" hidden>No activity yet.</p>
+          </div>
+
+          <div class="sidebar-block">
+            <h3 class="sidebar-subtitle">Account Services</h3>
+            <ul class="sidebar-list">
+              <li><a href="#details">{{icon:landmark:16}} Account Details</a></li>
+              <li><a href="#payments">{{icon:arrow-left-right:16}} Payments &amp; Transfers</a></li>
+              <li><a href="#statements">{{icon:file-text:16}} Statements</a></li>
+              <li><a href="#security">{{icon:shield-check:16}} Security Settings</a></li>
+              <li><a href="#support">{{icon:headset:16}} Contact Support</a></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ============================ CONTENT ============================ -->
+      <div class="dash-content">
+
+        <!-- ====================== WELCOME ====================== -->
+        <section class="welcome" id="welcome" aria-labelledby="welcome-greeting">
+          <div class="welcome-text">
+            <h1 class="welcome-greeting" id="welcome-greeting">Welcome back</h1>
+            <p class="welcome-hello" id="welcome-hello">Hello!</p>
+          </div>
+          <div class="welcome-meta">
+            <span class="meta-chip">{{icon:clock:15}} Last sign-in <b id="meta-lastsignin">&mdash;</b></span>
+            <span class="meta-chip">{{icon:shield-check:15}} Account status <b id="meta-status">&mdash;</b></span>
+          </div>
+        </section>
+
+        <!-- ====================== MAIN ACCOUNT CARD ====================== -->
+        <section class="account-hero" id="overview" aria-labelledby="hero-heading">
+          <span class="account-hero-pattern" aria-hidden="true"></span>
+          <div class="account-hero-inner">
+            <div class="account-hero-top">
+              <div class="account-hero-identity">
+                <p class="hero-eyebrow" id="hero-eyebrow">Account</p>
+                <h2 class="hero-holder" id="hero-holder">Account holder</h2>
+              </div>
+              <span class="status-pill status-pill--active" id="hero-status">Active</span>
+            </div>
+
+            <div class="account-hero-mid">
+              <div class="account-hero-number">
+                <p class="hero-label">Account number</p>
+                <p class="hero-number-value" id="account-number-value">&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;</p>
+                <p class="hero-note">{{icon:circle-alert:13}} <span id="account-number-note">Prototype account ID &mdash; a real account number is issued after identity verification.</span></p>
+                <div class="hero-actions">
+                  <button class="hero-btn" id="btn-toggle-number" type="button" aria-pressed="false">
+                    <span id="toggle-number-icon">{{icon:eye:16}}</span><span id="toggle-number-label">View account number</span>
+                  </button>
+                  <button class="hero-btn" id="btn-copy-number" type="button">{{icon:copy:16}} Copy</button>
+                </div>
+              </div>
+
+              <div class="account-hero-balance">
+                <p class="hero-label">Available balance</p>
+                <p class="hero-balance-value" id="hero-available">&mdash;</p>
+                <p class="hero-balance-sub" id="hero-available-sub">No balance data available yet</p>
+              </div>
+            </div>
+
+            <div class="account-hero-bottom">
+              <div class="hero-meta">
+                <span class="hero-label">Account opened</span>
+                <span class="hero-meta-value" id="hero-opened">&mdash;</span>
+              </div>
+              <div class="hero-meta">
+                <span class="hero-label">Account type</span>
+                <span class="hero-meta-value" id="hero-type">&mdash;</span>
+              </div>
+              <div class="hero-meta">
+                <span class="hero-label">Application reference</span>
+                <span class="hero-meta-value" id="hero-reference">&mdash;</span>
+              </div>
+              <a class="hero-link" href="#details">Account details {{icon:chevron-right:15}}</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================== ACCOUNT OVERVIEW ====================== -->
+        <section class="stat-grid" aria-label="Account overview">
+          <article class="stat-card">
+            <span class="stat-icon stat-icon--blue">{{icon:wallet:18}}</span>
+            <h3 class="stat-title">Available Balance</h3>
+            <p class="stat-value" id="stat-available">&mdash;</p>
+            <p class="stat-sub" id="stat-available-sub">No balance data available yet</p>
+          </article>
+          <article class="stat-card">
+            <span class="stat-icon stat-icon--navy">{{icon:banknote:18}}</span>
+            <h3 class="stat-title">Current Balance</h3>
+            <p class="stat-value" id="stat-current">&mdash;</p>
+            <p class="stat-sub" id="stat-current-sub">No balance data available yet</p>
+          </article>
+          <article class="stat-card">
+            <span class="stat-icon stat-icon--navy">{{icon:landmark:18}}</span>
+            <h3 class="stat-title">Account Type</h3>
+            <p class="stat-value stat-value--sm" id="stat-type">&mdash;</p>
+            <p class="stat-sub" id="stat-type-sub">Selected during application</p>
+          </article>
+          <article class="stat-card">
+            <span class="stat-icon stat-icon--green">{{icon:check-circle-2:18}}</span>
+            <h3 class="stat-title">Account Status</h3>
+            <p class="stat-value stat-value--sm" id="stat-status">&mdash;</p>
+            <p class="stat-sub" id="stat-status-sub">Status of your application</p>
+          </article>
+        </section>
+
+        <!-- ====================== QUICK ACTIONS ====================== -->
+        <section class="panel" id="quick-actions" aria-labelledby="qa-title">
+          <h2 class="panel-title" id="qa-title">Quick Actions</h2>
+          <div class="qa-grid" id="qa-grid"></div>
+        </section>
+
+        <!-- ====================== PAYMENTS + TRANSACTIONS ====================== -->
+        <div class="two-col">
+          <section class="panel" id="payments" aria-labelledby="payments-title">
+            <h2 class="panel-title" id="payments-title">Payments &amp; Billing</h2>
+
+            <div class="subpanel" id="upcoming-payment">
+              <h3 class="subpanel-title">Upcoming payment</h3>
+              <p class="empty-state" id="upcoming-empty">
+                <span class="empty-icon">{{icon:calendar-days:22}}</span>
+                No upcoming payments
+              </p>
+              <dl class="detail-list" id="upcoming-detail" hidden>
+                <div class="detail-row"><dt>Due date</dt><dd id="upcoming-due">&mdash;</dd></div>
+                <div class="detail-row"><dt>Amount</dt><dd id="upcoming-amount">&mdash;</dd></div>
+                <div class="detail-row"><dt>Payee</dt><dd id="upcoming-payee">&mdash;</dd></div>
+              </dl>
+              <button class="btn btn-primary btn-sm" id="btn-make-payment" type="button" hidden>{{icon:send:16}} Make Payment</button>
+            </div>
+
+            <div class="subpanel">
+              <h3 class="subpanel-title">Payment history</h3>
+              <p class="empty-state empty-state--sm" id="payment-history-empty">
+                <span class="empty-icon">{{icon:receipt:18}}</span>
+                No payment history yet
+              </p>
+              <ul class="mini-list" id="payment-history"></ul>
+            </div>
+          </section>
+
+          <section class="panel" id="statements" aria-labelledby="transactions-title">
+            <h2 class="panel-title" id="transactions-title">Recent Transactions</h2>
+            <p class="empty-state" id="transactions-empty">
+              <span class="empty-icon">{{icon:history:22}}</span>
+              No transactions yet
+            </p>
+            <div class="table-wrap" id="transactions-table-wrap" hidden>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Description</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Type</th>
+                    <th scope="col" class="ta-right">Amount</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="transactions-body"></tbody>
+              </table>
+            </div>
+            <a class="panel-link" href="#statements">View All Transactions {{icon:chevron-right:15}}</a>
+          </section>
+        </div>
+
+        <!-- ====================== SERVICES ====================== -->
+        <section class="panel" id="services" aria-labelledby="services-title">
+          <h2 class="panel-title" id="services-title">Account Services</h2>
+          <div class="service-grid" id="service-grid"></div>
+        </section>
+
+        <!-- ====================== EXPLORE PRODUCTS ====================== -->
+        <section class="panel" id="products" aria-labelledby="products-title">
+          <h2 class="panel-title" id="products-title">Explore Products</h2>
+          <div class="product-grid" id="product-grid"></div>
+        </section>
+
+        <!-- ====================== ACCOUNT INFORMATION ====================== -->
+        <section class="panel" id="details" aria-labelledby="details-title">
+          <h2 class="panel-title" id="details-title">Account Information</h2>
+          <dl class="info-grid">
+            <div class="info-item">
+              <dt>Full Legal Name</dt>
+              <dd id="info-name">&mdash;</dd>
+            </div>
+            <div class="info-item">
+              <dt>Account Number</dt>
+              <dd class="info-value-row">
+                <span id="info-number">&mdash;</span>
+                <button class="icon-btn icon-btn--tiny" id="btn-copy-number-2" type="button" aria-label="Copy account number">{{icon:copy:15}}</button>
+              </dd>
+            </div>
+            <div class="info-item">
+              <dt>Account Type</dt>
+              <dd id="info-type">&mdash;</dd>
+            </div>
+            <div class="info-item">
+              <dt>Account Status</dt>
+              <dd id="info-status">&mdash;</dd>
+            </div>
+            <div class="info-item">
+              <dt>Account Opening Date</dt>
+              <dd id="info-opened">&mdash;</dd>
+            </div>
+            <div class="info-item">
+              <dt>Email Address</dt>
+              <dd id="info-email">&mdash;</dd>
+            </div>
+            <div class="info-item">
+              <dt>Registered Phone Number</dt>
+              <dd id="info-phone">&mdash;</dd>
+            </div>
+            <div class="info-item">
+              <dt>Mailing Address</dt>
+              <dd id="info-address">&mdash;</dd>
+            </div>
+          </dl>
+          <p class="panel-footnote">{{icon:lock:14}} Social Security numbers, passwords and identity documents are never displayed in the dashboard.</p>
+        </section>
+
+        <!-- ====================== SECURITY ====================== -->
+        <section class="panel" id="security" aria-labelledby="security-title">
+          <h2 class="panel-title" id="security-title">Security Settings</h2>
+          <div class="security-grid">
+            <div class="security-item">
+              <span class="security-icon">{{icon:shield-check:18}}</span>
+              <div>
+                <p class="security-title">Human verification</p>
+                <p class="security-sub" id="security-turnstile">Cloudflare Turnstile &mdash; checking&hellip;</p>
+              </div>
+            </div>
+            <div class="security-item">
+              <span class="security-icon">{{icon:clock:18}}</span>
+              <div>
+                <p class="security-title">Last successful sign-in</p>
+                <p class="security-sub" id="security-lastsignin">&mdash;</p>
+              </div>
+            </div>
+            <div class="security-item">
+              <span class="security-icon">{{icon:users:18}}</span>
+              <div>
+                <p class="security-title">Active sessions</p>
+                <p class="security-sub">This browser only &mdash; sign out to end the session</p>
+              </div>
+            </div>
+            <div class="security-item">
+              <span class="security-icon">{{icon:settings:18}}</span>
+              <div>
+                <p class="security-title">Manage trusted devices</p>
+                <p class="security-sub">Coming soon</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================== RECENT ACCOUNT ACTIVITY ====================== -->
+        <section class="panel" id="activity" aria-labelledby="activity-title">
+          <h2 class="panel-title" id="activity-title">Recent Account Activity</h2>
+          <p class="empty-state" id="activity-empty">
+            <span class="empty-icon">{{icon:clock:22}}</span>
+            No account activity yet
+          </p>
+          <ol class="timeline" id="activity-list"></ol>
+        </section>
+
+        <!-- ====================== SUPPORT ====================== -->
+        <section class="panel" id="support" aria-labelledby="support-title">
+          <h2 class="panel-title" id="support-title">Help &amp; Support</h2>
+          <div class="support-grid">
+            <div class="support-item">
+              <span class="support-icon">{{icon:headset:18}}</span>
+              <p class="support-title">Call us</p>
+              <p class="support-sub">1-800-374-9700</p>
+              <p class="support-note">24 hours a day, 7 days a week</p>
+            </div>
+            <div class="support-item">
+              <span class="support-icon">{{icon:book-open:18}}</span>
+              <p class="support-title">Help Center</p>
+              <p class="support-sub">Guides and common questions</p>
+              <a class="panel-link" href="/">Visit Help Center {{icon:chevron-right:15}}</a>
+            </div>
+            <div class="support-item">
+              <span class="support-icon">{{icon:mail:18}}</span>
+              <p class="support-title">Email us</p>
+              <p class="support-sub" id="support-email">&mdash;</p>
+              <p class="support-note">We reply within two business days</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ============================ FOOTER ============================ -->
+  <footer class="dash-footer">
+    <div class="dash-footer-inner">
+      <nav class="dash-footer-nav" aria-label="Footer navigation">
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#security">Security Center</a></li>
+          <li><a href="#">Terms and Conditions</a></li>
+          <li><a href="#support">Contact Us</a></li>
+          <li><a href="#support">Help Center</a></li>
+          <li><a href="#">Accessibility</a></li>
+        </ul>
+      </nav>
+
+      <div class="dash-footer-brand">
+        <img src="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg" alt="Citi" width="44" height="44">
+        <p class="dash-footer-copy">&copy; 2026 Citigroup Inc. All rights reserved.</p>
+      </div>
+
+      <div class="dash-footer-disclosure">
+        <p><strong>Prototype environment.</strong> This dashboard is a front-end demonstration of the Citi mirror site. Account numbers shown are prototype identifiers derived from your application reference, not bank-issued account numbers, and no balances, payments or transactions are connected to a core banking system.</p>
+        <p>Citibank.com provides information about and access to accounts and financial services provided by Citibank, N.A. and its affiliates in the United States and its territories. Deposit products and services are offered by Citibank, N.A., Member FDIC.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================ DIALOGS ============================ -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-head">
+        <h2 class="modal-title" id="modal-title">Title</h2>
+        <button class="icon-btn" type="button" data-modal-close aria-label="Close">{{icon:x:20}}</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ============================ SEARCH ============================ -->
+  <div class="modal modal--search" id="search-modal" hidden>
+    <div class="modal-backdrop" data-search-close></div>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="search-title">
+      <div class="modal-head">
+        <h2 class="modal-title" id="search-title">Search your dashboard</h2>
+        <button class="icon-btn" type="button" data-search-close aria-label="Close">{{icon:x:20}}</button>
+      </div>
+      <div class="modal-body">
+        <div class="search-field">
+          {{icon:search:18}}
+          <input type="search" id="search-input" placeholder="Search accounts, payments, statements&hellip;" autocomplete="off" aria-label="Search">
+        </div>
+        <ul class="search-results" id="search-results"></ul>
+        <p class="search-empty" id="search-empty" hidden>No matching sections.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="cf-turnstile-standalone" data-cf-turnstile-standalone>
+    <h2>Verify you are human</h2>
+    <p>Complete this check to confirm you are not a robot before using this dashboard.</p>
+    <div class="cf-turnstile-host"></div>
+    <p class="cf-turnstile-msg" role="status" aria-live="polite"></p>
+  </div>
+
+  <script src="/dashboard/icons.js" defer></script>
+  <script src="/dashboard/dashboard.js" defer></script>
+</body>
+</html>
