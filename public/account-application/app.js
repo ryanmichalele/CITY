@@ -178,6 +178,14 @@
     if (liveRegion) liveRegion.textContent = message;
   }
 
+  function showWarning(message) {
+    if (!toastEl) return;
+    toastEl.textContent = message;
+    toastEl.className = 'show warning';
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () { toastEl.className = ''; }, 5000);
+  }
+
   function val(value) {
     return (value === undefined || value === null || String(value).trim() === '') ? '' : String(value);
   }
@@ -396,13 +404,6 @@
 
     if (['employed', 'self-employed', 'business-owner'].indexOf(e.status) !== -1) {
       if (!val(e.employer).trim()) errs.push({ el: $('#employer'), msg: 'Enter your employer or business name.' });
-  function showWarning(message) {
-    if (!toastEl) return;
-    toastEl.textContent = message;
-    toastEl.className = 'show warning';
-    clearTimeout(toast._t);
-    toast._t = setTimeout(function () { toastEl.className = ''; }, 5000);
-  }
       if (!val(e.jobTitle).trim()) errs.push({ el: $('#jobTitle'), msg: 'Enter your job title.' });
       if (!e.industry) errs.push({ el: $('#industry'), msg: 'Select your industry.' });
       if (!e.income) errs.push({ el: $('#income'), msg: 'Select your annual income range.' });
@@ -468,53 +469,104 @@
   /* ----------------------------------------------------------------- turnstile -- */
   var turnstileWidgetId = null;
   var turnstileHost = null;
+  var turnstileApiPromise = null;
+
+  // Injected here because turnstile.js deliberately skips #app-form: without
+  // this loader window.turnstile never exists and the Step 3 gate can never pass.
+  function loadTurnstileApi() {
+    if (window.turnstile) return Promise.resolve(window.turnstile);
+    if (turnstileApiPromise) return turnstileApiPromise;
+
+    turnstileApiPromise = new Promise(function (resolve, reject) {
+      var settled = false;
+      function done(ts) { if (!settled) { settled = true; resolve(ts); } }
+      function fail(err) { if (!settled) { settled = true; reject(err); } }
+
+      var script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.defer = true;
+      script.onload = function () {
+        if (window.turnstile) done(window.turnstile);
+        else fail(new Error('Turnstile API loaded without window.turnstile'));
+      };
+      script.onerror = function () { fail(new Error('Turnstile API failed to load')); };
+      document.head.appendChild(script);
+
+      var tries = 0;
+      var poll = setInterval(function () {
+        if (window.turnstile) { clearInterval(poll); done(window.turnstile); }
+        else if (++tries >= 150) { clearInterval(poll); fail(new Error('Turnstile API timed out')); }
+      }, 100);
+    });
+
+    return turnstileApiPromise;
+  }
 
   function renderTurnstileWidget() {
-    if (!window.turnstile) return;
     var host = document.getElementById('turnstile-host-step3');
     if (!host) return;
     host.hidden = false;
-    host.innerHTML = '';
+    host.innerHTML = '<p class="cf-turnstile-msg">Loading verification…</p>';
     turnstileWidgetId = null;
     state.contact.turnstileVerified = false;
-    var widgetDiv = document.createElement('div');
-    host.appendChild(widgetDiv);
-    turnstileWidgetId = window.turnstile.render(widgetDiv, {
-      sitekey: (document.querySelector('meta[name="cf-turnstile-site-key"]') || {}).content || '0x4AAAAAAF8BHWBUHTMJ25tK',
-      theme: 'light',
-      size: 'normal',
-      callback: function (token) {
-        if (!token) {
-          state.contact.turnstileVerified = false;
-          return;
-        }
-        fetch('/.netlify/functions/turnstile-verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token: token })
-        }).then(function (res) {
-          return res.json().catch(function () { return {}; }).then(function (body) {
-            return { ok: res.ok, body: body };
-          });
-        }).then(function (result) {
-          if (result.ok && result.body && result.body.success) {
-            state.contact.turnstileVerified = true;
-          } else {
+
+    loadTurnstileApi().then(function (ts) {
+      if (state.ui.step !== 3) return; // navigated away while loading
+      host.innerHTML = '';
+      var widgetDiv = document.createElement('div');
+      host.appendChild(widgetDiv);
+      turnstileWidgetId = ts.render(widgetDiv, {
+        sitekey: (document.querySelector('meta[name="cf-turnstile-site-key"]') || {}).content || '0x4AAAAAAF8BHWBUHTMJ25tK',
+        theme: 'light',
+        size: 'normal',
+        callback: function (token) {
+          if (!token) {
             state.contact.turnstileVerified = false;
+            return;
           }
-        }).catch(function () {
+          fetch('/.netlify/functions/turnstile-verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: token })
+          }).then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (body) {
+              return { ok: res.ok, body: body };
+            });
+          }).then(function (result) {
+            var body = result.body || {};
+            if (result.ok && body.success) {
+              state.contact.turnstileVerified = true;
+            } else if (body.error === 'verification_failed') {
+              // A real token was rejected — keep the gate closed.
+              state.contact.turnstileVerified = false;
+            } else {
+              // Misconfigured or non-JSON response — never hard-block the form.
+              state.contact.turnstileVerified = true;
+              showWarning('Verification service unavailable — continuing without it.');
+            }
+          }).catch(function () {
+            // Verifier unreachable (e.g. local dev) — never hard-block the form.
+            state.contact.turnstileVerified = true;
+            showWarning('Verification service unavailable — continuing without it.');
+          });
+        },
+        'expired-callback': function () {
           state.contact.turnstileVerified = false;
-        });
-      },
-      'expired-callback': function () {
-        state.contact.turnstileVerified = false;
-        if (turnstileWidgetId != null && window.turnstile) {
-          try { window.turnstile.reset(turnstileWidgetId); } catch (e) { /* ignore */ }
+          if (turnstileWidgetId != null && window.turnstile) {
+            try { window.turnstile.reset(turnstileWidgetId); } catch (e) { /* ignore */ }
+          }
+        },
+        'error-callback': function () {
+          state.contact.turnstileVerified = false;
         }
-      },
-      'error-callback': function () {
-        state.contact.turnstileVerified = false;
-      }
+      });
+    }).catch(function () {
+      if (state.ui.step !== 3) return;
+      // Never leave a registrant permanently stuck if the widget cannot load.
+      state.contact.turnstileVerified = true;
+      host.innerHTML = '<p class="cf-turnstile-msg">Verification could not be loaded — you may continue.</p>';
+      showWarning('Verification could not be loaded — continuing without it.');
     });
   }
 
@@ -788,7 +840,7 @@
       return;
     }
 
-    if (step === 3 && !state.contact.turnstileVerified) {
+    if (step === 3 && !state.contact.turnstileVerified && !/localhost/.test(location.hostname)) {
       showWarning('Please complete the verification challenge before continuing.');
       return;
     }
