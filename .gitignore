@@ -1,5 +1,6 @@
 # Local Netlify folder (created by netlify CLI / Netlify Dev)
 .netlify
+.sanity
 
 # Dependency directories
 node_modules/
