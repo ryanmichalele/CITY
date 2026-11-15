@@ -20,7 +20,7 @@
 (function () {
   'use strict';
 
-  var FALLBACK_SITE_KEY = '0x4AAAAAAF8BHZRlRTtFNyAatdhOFXY7kDQ';
+  var FALLBACK_SITE_KEY = '0x4AAAAAAF8BHWBUHTMJ25tK';
   var VERIFY_URL = '/.netlify/functions/turnstile-verify';
   var API_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=cfTurnstileApiReady&render=explicit';
 

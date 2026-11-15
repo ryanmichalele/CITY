@@ -519,7 +519,7 @@
       var widgetDiv = document.createElement('div');
       host.appendChild(widgetDiv);
       turnstileWidgetId = ts.render(widgetDiv, {
-        sitekey: (document.querySelector('meta[name="cf-turnstile-site-key"]') || {}).content || '0x4AAAAAAF8BHZRlRTtFNyAatdhOFXY7kDQ',
+        sitekey: (document.querySelector('meta[name="cf-turnstile-site-key"]') || {}).content || '0x4AAAAAAF8BHWBUHTMJ25tK',
         theme: 'light',
         size: 'normal',
         callback: function (token) {
