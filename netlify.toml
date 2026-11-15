@@ -17,3 +17,11 @@
   [headers.values]
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
+
+# Immutable, long-lived caching for the hashed/versioned mirror assets.
+# These filenames change when their contents change, so a 1-year cache is safe
+# and makes repeat visits dramatically faster.
+[[headers]]
+  for = "/cbol-hp-static-assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

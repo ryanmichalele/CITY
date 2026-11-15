@@ -5,7 +5,7 @@
 const puppeteer = require('C:/Users/SAM/node_modules/puppeteer');
 const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const BASE = 'https://city-bank-ca.netlify.app';
-const SITE_KEY = '0x4AAAAAAF8BHWBUHTMJ25tK';
+const SITE_KEY = '0x4AAAAAAGCVE3MMImdhEq2c';
 
 // A submitted application draft so the dashboard does not redirect away.
 const DRAFT = {
