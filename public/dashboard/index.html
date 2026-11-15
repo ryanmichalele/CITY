@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Online Banking Dashboard | Citi</title>
   <meta name="description" content="Your Citi account summary, balances, transactions and account details.">
-  <meta name="cf-turnstile-site-key" content="0x4AAAAAAF8BHWBUHTMJ25tK">
+  <meta name="cf-turnstile-site-key" content="0x4AAAAAAF8BHZRlRTtFNyAatdhOFXY7kDQ">
   <link rel="icon" href="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg" type="image/svg+xml">
   <link rel="preload" href="/dashboard/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/dashboard/fonts/inter.css">
@@ -189,6 +189,7 @@
 
       <!-- ============================ CONTENT ============================ -->
       <div class="dash-content">
+        <div class="dash-notices" id="dash-notices" hidden></div>
 
         <!-- ====================== WELCOME ====================== -->
         <section class="welcome" id="welcome" aria-labelledby="welcome-greeting">
@@ -218,7 +219,7 @@
 
             <div class="account-hero-mid">
               <div class="account-hero-number">
-                <p class="hero-label">Account number</p>
+                <p class="hero-label" id="hero-label-number">Account number</p>
                 <p class="hero-number-value" id="account-number-value">&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;</p>
                 <p class="hero-note"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10" />
   <line x1="12" x2="12" y1="8" y2="12" />
@@ -234,7 +235,7 @@
               </div>
 
               <div class="account-hero-balance">
-                <p class="hero-label">Available balance</p>
+                <p class="hero-label" id="hero-label-available">Available balance</p>
                 <p class="hero-balance-value" id="hero-available">&mdash;</p>
                 <p class="hero-balance-sub" id="hero-available-sub">No balance data available yet</p>
               </div>
@@ -242,15 +243,15 @@
 
             <div class="account-hero-bottom">
               <div class="hero-meta">
-                <span class="hero-label">Account opened</span>
+                <span class="hero-label" id="hero-label-opened">Account opened</span>
                 <span class="hero-meta-value" id="hero-opened">&mdash;</span>
               </div>
               <div class="hero-meta">
-                <span class="hero-label">Account type</span>
+                <span class="hero-label" id="hero-label-type">Account type</span>
                 <span class="hero-meta-value" id="hero-type">&mdash;</span>
               </div>
               <div class="hero-meta">
-                <span class="hero-label">Application reference</span>
+                <span class="hero-label" id="hero-label-reference">Application reference</span>
                 <span class="hero-meta-value" id="hero-reference">&mdash;</span>
               </div>
               <a class="hero-link" href="#details">Account details <svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6" /></svg></a>
@@ -263,7 +264,7 @@
           <article class="stat-card">
             <span class="stat-icon stat-icon--blue"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" />
   <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></svg></span>
-            <h3 class="stat-title">Available Balance</h3>
+            <h3 class="stat-title" id="stat-label-available">Available Balance</h3>
             <p class="stat-value" id="stat-available">&mdash;</p>
             <p class="stat-sub" id="stat-available-sub">No balance data available yet</p>
           </article>
@@ -271,7 +272,7 @@
             <span class="stat-icon stat-icon--navy"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="20" height="12" x="2" y="6" rx="2" />
   <circle cx="12" cy="12" r="2" />
   <path d="M6 12h.01M18 12h.01" /></svg></span>
-            <h3 class="stat-title">Current Balance</h3>
+            <h3 class="stat-title" id="stat-label-current">Current Balance</h3>
             <p class="stat-value" id="stat-current">&mdash;</p>
             <p class="stat-sub" id="stat-current-sub">No balance data available yet</p>
           </article>
@@ -282,14 +283,14 @@
   <path d="M18 18v-7" />
   <path d="M3 22h18" />
   <path d="M6 18v-7" /></svg></span>
-            <h3 class="stat-title">Account Type</h3>
+            <h3 class="stat-title" id="stat-label-type">Account Type</h3>
             <p class="stat-value stat-value--sm" id="stat-type">&mdash;</p>
             <p class="stat-sub" id="stat-type-sub">Selected during application</p>
           </article>
           <article class="stat-card">
             <span class="stat-icon stat-icon--green"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10" />
   <path d="m16 9-5.5 5.5L8 12" /></svg></span>
-            <h3 class="stat-title">Account Status</h3>
+            <h3 class="stat-title" id="stat-label-status">Account Status</h3>
             <p class="stat-value stat-value--sm" id="stat-status">&mdash;</p>
             <p class="stat-sub" id="stat-status-sub">Status of your application</p>
           </article>
@@ -319,7 +320,7 @@
   <path d="M8 17h.01" />
   <path d="M12 17h.01" />
   <path d="M16 17h.01" /></svg></span>
-                No upcoming payments
+                <span id="empty-payments-upcoming">No upcoming payments</span>
               </p>
               <dl class="detail-list" id="upcoming-detail" hidden>
                 <div class="detail-row"><dt>Due date</dt><dd id="upcoming-due">&mdash;</dd></div>
@@ -336,7 +337,7 @@
                 <span class="empty-icon"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 17V7" />
   <path d="M16 8h-6a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8" />
   <path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /></svg></span>
-                No payment history yet
+                <span id="empty-payments-history">No payment history yet</span>
               </p>
               <ul class="mini-list" id="payment-history"></ul>
             </div>
@@ -348,7 +349,7 @@
               <span class="empty-icon"><svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
   <path d="M3 3v5h5" />
   <path d="M12 7v5l4 2" /></svg></span>
-              No transactions yet
+              <span id="empty-transactions">No transactions yet</span>
             </p>
             <div class="table-wrap" id="transactions-table-wrap" hidden>
               <table class="data-table">
@@ -385,11 +386,11 @@
           <h2 class="panel-title" id="details-title">Account Information</h2>
           <dl class="info-grid">
             <div class="info-item">
-              <dt>Full Legal Name</dt>
+              <dt id="label-info-name">Full Legal Name</dt>
               <dd id="info-name">&mdash;</dd>
             </div>
             <div class="info-item">
-              <dt>Account Number</dt>
+              <dt id="label-info-number">Account Number</dt>
               <dd class="info-value-row">
                 <span id="info-number">&mdash;</span>
                 <button class="icon-btn icon-btn--tiny" id="btn-copy-number-2" type="button" aria-label="Copy account number"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
@@ -397,27 +398,27 @@
               </dd>
             </div>
             <div class="info-item">
-              <dt>Account Type</dt>
+              <dt id="label-info-type">Account Type</dt>
               <dd id="info-type">&mdash;</dd>
             </div>
             <div class="info-item">
-              <dt>Account Status</dt>
+              <dt id="label-info-status">Account Status</dt>
               <dd id="info-status">&mdash;</dd>
             </div>
             <div class="info-item">
-              <dt>Account Opening Date</dt>
+              <dt id="label-info-opened">Account Opening Date</dt>
               <dd id="info-opened">&mdash;</dd>
             </div>
             <div class="info-item">
-              <dt>Email Address</dt>
+              <dt id="label-info-email">Email Address</dt>
               <dd id="info-email">&mdash;</dd>
             </div>
             <div class="info-item">
-              <dt>Registered Phone Number</dt>
+              <dt id="label-info-phone">Registered Phone Number</dt>
               <dd id="info-phone">&mdash;</dd>
             </div>
             <div class="info-item">
-              <dt>Mailing Address</dt>
+              <dt id="label-info-address">Mailing Address</dt>
               <dd id="info-address">&mdash;</dd>
             </div>
           </dl>
@@ -441,7 +442,7 @@
               <span class="security-icon"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10" />
   <path d="M12 6v6l4 2" /></svg></span>
               <div>
-                <p class="security-title">Last successful sign-in</p>
+                <p class="security-title" id="security-label-lastsignin">Last successful sign-in</p>
                 <p class="security-sub" id="security-lastsignin">&mdash;</p>
               </div>
             </div>
@@ -464,6 +465,7 @@
               </div>
             </div>
           </div>
+          <p class="panel-footnote" id="security-body" hidden></p>
         </section>
 
         <!-- ====================== LOGIN CREDENTIALS ====================== -->
@@ -473,7 +475,7 @@
             <div class="security-item">
               <span class="security-icon"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></span>
               <div>
-                <p class="security-title">Login ID / Application Reference</p>
+                <p class="security-title" id="credentials-label-login">Login ID / Application Reference</p>
                 <p class="security-sub" id="credentials-login-id">—</p>
                 <button class="btn btn-outline btn-sm" id="btn-copy-login-id" type="button" style="margin-top:8px;"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
   <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg> Copy</button>
@@ -482,13 +484,13 @@
             <div class="security-item">
               <span class="security-icon"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></span>
               <div>
-                <p class="security-title">Login Password</p>
+                <p class="security-title" id="credentials-label-password">Login Password</p>
                 <p class="security-sub" id="credentials-password">••••••••</p>
                 <button class="btn btn-outline btn-sm" id="btn-change-password" type="button" style="margin-top:8px;">Change Password</button>
               </div>
             </div>
           </div>
-          <p class="panel-footnote"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-4 10-9V5.6A10 10 0 0 0 2 5.6v6.4S4 18 12 18" /><path d="M12 18v-6" /></svg> Keep your login credentials safe. Never share your password with anyone.</p>
+          <p class="panel-footnote" id="credentials-note"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-4 10-9V5.6A10 10 0 0 0 2 5.6v6.4S4 18 12 18" /><path d="M12 18v-6" /></svg> <span id="credentials-note-text">Keep your login credentials safe. Never share your password with anyone.</span></p>
         </section>
 
         <!-- ====================== RECENT ACCOUNT ACTIVITY ====================== -->
@@ -497,7 +499,7 @@
           <p class="empty-state" id="activity-empty">
             <span class="empty-icon"><svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10" />
   <path d="M12 6v6l4 2" /></svg></span>
-            No account activity yet
+            <span id="empty-activity">No account activity yet</span>
           </p>
           <ol class="timeline" id="activity-list"></ol>
         </section>
@@ -509,25 +511,26 @@
             <div class="support-item">
               <span class="support-icon"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z" />
   <path d="M21 16v2a4 4 0 0 1-4 4h-5" /></svg></span>
-              <p class="support-title">Call us</p>
-              <p class="support-sub">1-800-374-9700</p>
-              <p class="support-note">24 hours a day, 7 days a week</p>
+              <p class="support-title" id="support-label-call">Call us</p>
+              <p class="support-sub" id="support-phone">1-800-374-9700</p>
+              <p class="support-note" id="support-hours">24 hours a day, 7 days a week</p>
             </div>
             <div class="support-item">
               <span class="support-icon"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v16" />
   <path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg></span>
               <p class="support-title">Help Center</p>
               <p class="support-sub">Guides and common questions</p>
-              <a class="panel-link" href="/">Visit Help Center <svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6" /></svg></a>
+              <a class="panel-link" href="/"><span id="support-link-help">Visit Help Center</span> <svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6" /></svg></a>
             </div>
             <div class="support-item">
               <span class="support-icon"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
   <rect x="2" y="4" width="20" height="16" rx="2" /></svg></span>
-              <p class="support-title">Email us</p>
+              <p class="support-title" id="support-label-email">Email us</p>
               <p class="support-sub" id="support-email">&mdash;</p>
-              <p class="support-note">We reply within two business days</p>
+              <p class="support-note" id="support-note-email">We reply within two business days</p>
             </div>
           </div>
+          <p class="panel-footnote" id="support-body" hidden></p>
         </section>
 
       </div>

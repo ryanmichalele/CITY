@@ -470,6 +470,7 @@
   var turnstileWidgetId = null;
   var turnstileHost = null;
   var turnstileApiPromise = null;
+  var turnstileToken = '';
 
   // Injected here because turnstile.js deliberately skips #app-form: without
   // this loader window.turnstile never exists and the Step 3 gate can never pass.
@@ -509,6 +510,7 @@
     host.hidden = false;
     host.innerHTML = '<p class="cf-turnstile-msg">Loading verification…</p>';
     turnstileWidgetId = null;
+    turnstileToken = '';
     state.contact.turnstileVerified = false;
 
     loadTurnstileApi().then(function (ts) {
@@ -517,39 +519,14 @@
       var widgetDiv = document.createElement('div');
       host.appendChild(widgetDiv);
       turnstileWidgetId = ts.render(widgetDiv, {
-        sitekey: (document.querySelector('meta[name="cf-turnstile-site-key"]') || {}).content || '0x4AAAAAAF8BHWBUHTMJ25tK',
+        sitekey: (document.querySelector('meta[name="cf-turnstile-site-key"]') || {}).content || '0x4AAAAAAF8BHZRlRTtFNyAatdhOFXY7kDQ',
         theme: 'light',
         size: 'normal',
         callback: function (token) {
-          if (!token) {
-            state.contact.turnstileVerified = false;
-            return;
-          }
-          fetch('/.netlify/functions/turnstile-verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: token })
-          }).then(function (res) {
-            return res.json().catch(function () { return {}; }).then(function (body) {
-              return { ok: res.ok, body: body };
-            });
-          }).then(function (result) {
-            var body = result.body || {};
-            if (result.ok && body.success) {
-              state.contact.turnstileVerified = true;
-            } else if (body.error === 'verification_failed') {
-              // A real token was rejected — keep the gate closed.
-              state.contact.turnstileVerified = false;
-            } else {
-              // Misconfigured or non-JSON response — never hard-block the form.
-              state.contact.turnstileVerified = true;
-              showWarning('Verification service unavailable — continuing without it.');
-            }
-          }).catch(function () {
-            // Verifier unreachable (e.g. local dev) — never hard-block the form.
-            state.contact.turnstileVerified = true;
-            showWarning('Verification service unavailable — continuing without it.');
-          });
+          // The token is single-use, so it is verified once by the submit
+          // function rather than here. Keep it in memory only.
+          turnstileToken = token || '';
+          state.contact.turnstileVerified = !!token;
         },
         'expired-callback': function () {
           state.contact.turnstileVerified = false;
@@ -572,6 +549,7 @@
 
   function resetTurnstileWidget() {
     state.contact.turnstileVerified = false;
+    turnstileToken = '';
     if (turnstileWidgetId != null && window.turnstile) {
       try { window.turnstile.reset(turnstileWidgetId); } catch (e) { /* ignore */ }
     }
@@ -1165,6 +1143,58 @@
     }
   }
 
+  function buildApplicationPayload() {
+    return {
+      accountType: state.accountType,
+      personal: {
+        firstName: state.personal.firstName,
+        middleName: state.personal.middleName,
+        lastName: state.personal.lastName,
+        dob: state.personal.dob,
+        ssn: fullSsn,
+        ssnLast4: state.personal.ssnLast4,
+        citizenship: state.personal.citizenship,
+        ownership: state.personal.ownership
+      },
+      contact: {
+        email: state.contact.email,
+        phone: state.contact.phone,
+        password: state.contact.createPassword,
+        street: state.contact.street,
+        apt: state.contact.apt,
+        city: state.contact.city,
+        state: state.contact.state,
+        zip: state.contact.zip,
+        country: state.contact.country,
+        mailingSame: state.contact.mailingSame,
+        mailing: state.contact.mailing
+      },
+      employment: state.employment,
+      financial: state.financial,
+      tax: state.tax,
+      agreements: {
+        accepted: Object.keys(state.agreements.accepted).filter(function (key) {
+          return !!state.agreements.accepted[key];
+        }),
+        signature: state.agreements.signature,
+        consent: state.agreements.consent,
+        docVersion: state.agreements.docVersion
+      },
+      turnstileToken: turnstileToken
+    };
+  }
+
+  function applyApproval(reference, status) {
+    state.meta.submitted = true;
+    state.meta.status = status || 'approved';
+    state.meta.reference = reference;
+    state.meta.submittedAt = new Date().toISOString();
+    state.agreements.acceptedAt = state.meta.submittedAt;
+    state.agreements.docVersion = DOC_VERSION;
+    state.ui.maxStep = 8;
+    plainPassword = val(state.contact.createPassword);
+  }
+
   async function submitApplication() {
     if (submitting || state.meta.submitted) {
       if (state.meta.submitted) showStep(8);
@@ -1175,29 +1205,61 @@
     btnNext.disabled = true;
     announce('Submitting your application.');
 
-    setTimeout(async function () {
-      state.meta.submitted = true;
-      state.meta.status = 'approved';
-      state.meta.reference = makeReference();
-      state.meta.submittedAt = new Date().toISOString();
-      state.agreements.acceptedAt = state.meta.submittedAt;
-      state.agreements.docVersion = DOC_VERSION;
-      state.ui.maxStep = 8;
+    var stored = false;
+    var gotResponse = false;
+    var failureMessage = 'We could not submit your application. Please try again.';
 
-      // Hash the customer-created password (client-side prototype only — not production-grade)
-      var cp = val(state.contact.createPassword);
-      if (cp) {
-        state.meta.passwordHash = await hashPassword(cp);
-        plainPassword = cp; // memory only — shown once on step 8, never persisted
+    try {
+      var response = await fetch('/.netlify/functions/applications', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(buildApplicationPayload())
+      });
+      gotResponse = true;
+      var data = await response.json().catch(function () { return {}; });
+
+      if (response.ok && data && data.ok) {
+        applyApproval(data.reference, data.status);
+        stored = true;
+      } else if (data && data.error === 'verification_failed') {
+        failureMessage = 'Verification failed. Please complete the challenge again.';
+        state.contact.turnstileVerified = false;
+        turnstileToken = '';
+      } else if (data && data.error === 'validation_failed') {
+        failureMessage = 'Some details are missing or invalid. Please review your application.';
       }
+    } catch (error) {
+      // Network or function failure — handled below.
+    }
 
-      submitting = false;
-      btnNext.classList.remove('loading');
-      persistDraft();
-      toast('Application approved. Redirecting to your dashboard...');
-      announce('Application approved. Redirecting to dashboard.');
-      setTimeout(function () { window.location.assign('/dashboard/'); }, 800);
-    }, 1100);
+    // Local development fallback only when the function itself is unreachable.
+    if (!stored && !gotResponse && /localhost|127\.0\.0\.1/.test(location.hostname)) {
+      applyApproval(makeReference(), 'approved');
+      stored = true;
+      showWarning('Saved in this browser only — the storage function is unavailable locally.');
+    }
+
+    submitting = false;
+    btnNext.classList.remove('loading');
+    btnNext.disabled = false;
+
+    if (!stored) {
+      showWarning(failureMessage);
+      announce(failureMessage);
+      return;
+    }
+
+    // Keep a hash in the local summary so the offline dashboard fallback still
+    // shows the credentials panel. Plaintext never leaves this page.
+    var cp = val(state.contact.createPassword);
+    if (cp) state.meta.passwordHash = await hashPassword(cp);
+
+    persistDraft();
+    showStep(8);
+    toast('Application approved. Redirecting to your dashboard...');
+    announce('Application approved. Redirecting to dashboard.');
+    setTimeout(function () { window.location.assign('/dashboard/'); }, 1200);
   }
 
   /* -------------------------------------------------------------- side fx --- */

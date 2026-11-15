@@ -26,6 +26,118 @@
     'money-market': 'Money Market Account',
   };
 
+  /* ------------------------------------------------------------- content --
+   * Built-in dashboard copy. Sanity supplies two optional layers on top:
+   *   per-user   application.dashboard   (this customer only)
+   *   defaults   dashboardDefaults.content (shared fallback)
+   * Resolution order: per-user -> defaults -> the values below.
+   * ---------------------------------------------------------------------- */
+  var DEFAULT_CONTENT = {
+    hero: {
+      eyebrow: '',
+      availableLabel: 'Available balance',
+      availableSub: '',
+      statusLabel: 'Status',
+      typeLabel: 'Account type',
+      openedLabel: 'Account opened',
+      referenceLabel: 'Application reference',
+      holderLabel: 'Account holder',
+    },
+    sectionTitles: {
+      quickActions: 'Quick Actions',
+      products: 'Explore Products',
+      services: 'Account Services',
+      payments: 'Payments & Billing',
+      transactions: 'Recent Transactions',
+      activity: 'Recent Account Activity',
+      notifications: 'Notifications',
+      security: 'Security Settings',
+      support: 'Help & Support',
+      details: 'Account Information',
+      credentials: 'Login Credentials',
+    },
+    stats: [],
+    details: [],
+    quickActions: [],
+    services: [],
+    products: [],
+    notices: [],
+    activity: [],
+    transactions: [],
+    payments: { upcoming: { active: false }, history: [] },
+    notifications: [],
+    security: { title: '', body: '', items: [] },
+    support: { title: '', body: '', phone: '', hours: '', email: '', links: [] },
+    emptyStates: {
+      balances: 'No balance data available yet',
+      payments: 'No upcoming payments',
+      transactions: 'No transactions yet',
+      activity: 'No account activity yet',
+      statements: 'No statements available yet',
+    },
+    credentialsPanel: {
+      title: 'Login Credentials',
+      loginIdLabel: 'Login ID / Application Reference',
+      passwordLabel: 'Login Password',
+      note: 'Keep your login credentials safe. Never share your password with anyone.',
+    },
+  };
+
+  function isPlainObject(value) {
+    return !!value && typeof value === 'object' && !Array.isArray(value);
+  }
+
+  // Deep merge CMS content over the built-in copy. Empty strings and empty
+  // arrays count as "not set", so a partially filled Studio document never
+  // blanks out a label or list by accident.
+  function mergeContent(base, override) {
+    if (Array.isArray(override)) {
+      if (override.length) return override.slice();
+      return Array.isArray(base) ? base.slice() : [];
+    }
+    if (isPlainObject(override)) {
+      var out = {};
+      if (isPlainObject(base)) {
+        Object.keys(base).forEach(function (key) { out[key] = base[key]; });
+      }
+      Object.keys(override).forEach(function (key) {
+        var value = override[key];
+        if (value === undefined || value === null) return;
+        if (typeof value === 'string' && value.trim() === '') return;
+        if (Array.isArray(value) && !value.length) return;
+        out[key] = mergeContent(base ? base[key] : undefined, value);
+      });
+      return out;
+    }
+    if (override === undefined || override === null) return base;
+    if (typeof override === 'string' && override.trim() === '') return base;
+    return override;
+  }
+
+  function resolveContent(perUser, defaults) {
+    return mergeContent(mergeContent(DEFAULT_CONTENT, defaults), perUser);
+  }
+
+  function contentOf(session) {
+    return (session && session.content) || DEFAULT_CONTENT;
+  }
+
+  function statOverride(content, key) {
+    var items = (content && content.stats) || [];
+    for (var i = 0; i < items.length; i++) {
+      if (items[i] && items[i].key === key) return items[i];
+    }
+    return null;
+  }
+
+  function detailOverride(content, key) {
+    var items = (content && content.details) || [];
+    for (var i = 0; i < items.length; i++) {
+      if (items[i] && items[i].key === key) return items[i];
+    }
+    return null;
+  }
+
   /* ------------------------------------------------------------------ dom -- */
   function $(sel, root) { return (root || document).querySelector(sel); }
   function $all(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
@@ -161,8 +273,138 @@
       upcomingPayment: null,
       paymentHistory: null,
       transactions: null,
+      activity: null,
+      content: resolveContent(null, null),
     };
   }
+
+  /* ------------------------------------------------- remote session model -- */
+  function referenceParts(reference) {
+    var parts = String(reference || '').split('-');
+    return { date: parts[1] || '', id: parts[2] || '' };
+  }
+
+  function numberOrNull(value) {
+    if (value === null || value === undefined || value === '') return null;
+    var n = Number(value);
+    return isFinite(n) ? n : null;
+  }
+
+  function formatPhone(value) {
+    var digits = String(value || '').replace(/\D/g, '');
+    if (digits.length === 10) {
+      return '(' + digits.slice(0, 3) + ') ' + digits.slice(3, 6) + '-' + digits.slice(6);
+    }
+    return String(value || '');
+  }
+
+  function normalizeStatus(value) {
+    var s = String(value || '').trim();
+    if (!s) return 'Active';
+    if (s.toLowerCase() === 'approved' || s.toLowerCase() === 'active') return 'Active';
+    if (s.toLowerCase() === 'frozen') return 'Frozen';
+    if (s.toLowerCase() === 'closed' || s.toLowerCase() === 'declined') return 'Closed';
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  // Maps the /session function payload (application + account + defaults)
+  // onto the same view model the render functions already understand.
+  function buildSessionFromApi(data) {
+    var app = (data && data.application) || {};
+    var account = (data && data.account) || {};
+    var personal = app.personal || {};
+    var contact = app.contact || {};
+    var reference = app.reference || '';
+    var parts = referenceParts(reference);
+
+    var firstName = String(personal.firstName || '').trim();
+    var middleName = String(personal.middleName || '').trim();
+    var lastName = String(personal.lastName || '').trim();
+    var fullName = [firstName, middleName, lastName].filter(Boolean).join(' ');
+
+    var accountType = account.type || app.accountType || '';
+    var prototypeId = account.prototypeId || ('P-' + parts.date + '-' + parts.id);
+    var last4 = (parts.id || prototypeId).slice(-4) || '0000';
+    var maskedId = account.maskedNumber || ('•••• •••• •••• ' + last4);
+
+    var street = [contact.street, contact.apt].filter(Boolean).join(', ');
+    var mailing = contact.mailing || {};
+    var mailingSame = contact.mailingSame === 'yes' || contact.mailingSame === true;
+    var mailingStreet = mailingSame
+      ? street
+      : [mailing.street, mailing.apt].filter(Boolean).join(', ');
+    var cityLine = [contact.city, contact.state, contact.zip].filter(Boolean).join(', ');
+
+    var balances = account.balances || {};
+    var availableBalance = numberOrNull(balances.available);
+    var currentBalance = numberOrNull(balances.current);
+
+    var payments = Array.isArray(account.payments) ? account.payments : [];
+    var upcomingRow = null;
+    var historyRows = [];
+    payments.forEach(function (p) {
+      if (!p) return;
+      var status = String(p.status || '').toLowerCase();
+      if (status === 'upcoming' && !upcomingRow) upcomingRow = p;
+      if (status === 'paid') historyRows.push(p);
+    });
+
+    var upcomingPayment = upcomingRow
+      ? {
+        dueDate: upcomingRow.dueDate || '',
+        amount: numberOrNull(upcomingRow.amount),
+        payee: upcomingRow.payee || '',
+      }
+      : null;
+
+    var paymentHistory = historyRows.map(function (p) {
+      return {
+        description: p.payee || 'Payment',
+        date: p.dueDate || '',
+        amount: numberOrNull(p.amount),
+      };
+    });
+
+    var stored = readJson(SESSION_KEY);
+    var sameReference = stored && stored.reference === reference;
+    var lastSignIn = sameReference && stored.lastSignIn ? stored.lastSignIn : new Date().toISOString();
+    var turnstile = app.turnstile || {};
+
+    return {
+      applicationReference: reference,
+      submittedAt: app.submittedAt || '',
+      openedDate: account.openedAt || app.submittedAt || '',
+      firstName: firstName,
+      middleName: middleName,
+      lastName: lastName,
+      fullName: fullName,
+      email: contact.email || '',
+      phone: formatPhone(contact.phone),
+      street: street,
+      city: cityLine,
+      mailingAddress: [mailingStreet, cityLine].filter(Boolean).join(', '),
+      accountType: accountType,
+      accountTypeLabel: ACCOUNT_TYPE_LABELS[accountType] || 'Deposit Account',
+      passwordHash: app.hasPassword ? 'stored' : '',
+      accountStatus: normalizeStatus(account.status || app.status),
+      prototypeId: prototypeId,
+      maskedId: maskedId,
+      maskedShort: '••• ' + last4,
+      lastSignIn: lastSignIn,
+      firstSignIn: !(sameReference && stored.lastSignIn),
+      device: 'This browser',
+      availableBalance: availableBalance,
+      currentBalance: currentBalance,
+      upcomingPayment: upcomingPayment,
+      paymentHistory: paymentHistory.length ? paymentHistory : null,
+      transactions: Array.isArray(account.transactions) && account.transactions.length ? account.transactions : null,
+      activity: Array.isArray(account.activity) && account.activity.length ? account.activity : null,
+      turnstileVerified: !!turnstile.success,
+      turnstileVerifiedAt: turnstile.challengeAt || '',
+      content: resolveContent(app.dashboard, data && data.defaults),
+    };
+  }
+
 
   function persistSession(session) {
     writeJson(SESSION_KEY, {
@@ -203,12 +445,19 @@
   }
 
   function renderHero(session) {
-    setText('#hero-eyebrow', session.accountTypeLabel);
+    var content = contentOf(session);
+    var hero = content.hero || {};
+
+    setText('#hero-eyebrow', hero.eyebrow || session.accountTypeLabel);
     setText('#hero-holder', session.fullName || 'Account holder');
     setText('#hero-status', session.accountStatus);
     setText('#hero-opened', formatDate(session.openedDate));
     setText('#hero-type', session.accountTypeLabel);
     setText('#hero-reference', session.applicationReference || '—');
+    setText('#hero-label-available', hero.availableLabel || 'Available balance');
+    setText('#hero-label-opened', hero.openedLabel || 'Account opened');
+    setText('#hero-label-type', hero.typeLabel || 'Account type');
+    setText('#hero-label-reference', hero.referenceLabel || 'Application reference');
 
     var statusPill = $('#hero-status');
     if (statusPill) {
@@ -218,31 +467,62 @@
 
     setValue('#hero-available', formatCurrency(session.availableBalance));
     setText('#hero-available-sub', session.availableBalance === null
-      ? 'No balance data available yet'
-      : 'As of ' + formatDateTime(session.lastSignIn));
+      ? content.emptyStates.balances
+      : (hero.availableSub || 'As of ' + formatDateTime(session.lastSignIn)));
   }
 
   function renderStats(session) {
-    setValue('#stat-available', formatCurrency(session.availableBalance));
-    setText('#stat-available-sub', session.availableBalance === null ? 'No balance data available yet' : 'Available to withdraw');
-    setValue('#stat-current', formatCurrency(session.currentBalance));
-    setText('#stat-current-sub', session.currentBalance === null ? 'No balance data available yet' : 'Total account balance');
-    setText('#stat-type', session.accountTypeLabel);
-    setText('#stat-type-sub', 'Selected during application');
-    setText('#stat-status', session.accountStatus);
-    setText('#stat-status-sub', 'Status of your application');
+    var content = contentOf(session);
+    var emptyBalances = content.emptyStates.balances;
+
+    applyStat(content, 'available', '#stat-label-available', '#stat-available', '#stat-available-sub',
+      formatCurrency(session.availableBalance), 'Available Balance',
+      session.availableBalance === null ? emptyBalances : 'Available to withdraw');
+
+    applyStat(content, 'current', '#stat-label-current', '#stat-current', '#stat-current-sub',
+      formatCurrency(session.currentBalance), 'Current Balance',
+      session.currentBalance === null ? emptyBalances : 'Total account balance');
+
+    applyStat(content, 'type', '#stat-label-type', '#stat-type', '#stat-type-sub',
+      session.accountTypeLabel, 'Account Type', 'Selected during application');
+
+    applyStat(content, 'status', '#stat-label-status', '#stat-status', '#stat-status-sub',
+      session.accountStatus, 'Account Status', 'Status of your application');
+  }
+
+  function applyStat(content, key, labelSel, valueSel, subSel, fallbackValue, fallbackLabel, fallbackSub) {
+    var item = statOverride(content, key);
+    setText(labelSel, (item && item.label) || fallbackLabel);
+    setText(subSel, (item && item.sub) || fallbackSub);
+    if (item && item.value) {
+      setText(valueSel, item.value);
+      var el = $(valueSel);
+      if (el) el.classList.remove('is-empty');
+    } else {
+      setValue(valueSel, fallbackValue);
+    }
   }
 
   function renderDetails(session) {
-    setText('#info-name', session.fullName || '—');
-    setText('#info-number', session.prototypeId || '—');
-    setText('#info-type', session.accountTypeLabel);
-    setText('#info-status', session.accountStatus);
-    setText('#info-opened', formatDate(session.openedDate));
-    setText('#info-email', session.email || '—');
-    setText('#info-phone', session.phone || '—');
-    setText('#info-address', session.mailingAddress || '—');
-    setText('#support-email', session.email || '—');
+    var content = contentOf(session);
+    var rows = {
+      name: { label: 'Full Legal Name', value: session.fullName || '—' },
+      number: { label: 'Account Number', value: session.prototypeId || '—' },
+      type: { label: 'Account Type', value: session.accountTypeLabel || '—' },
+      status: { label: 'Account Status', value: session.accountStatus || '—' },
+      opened: { label: 'Account Opening Date', value: formatDate(session.openedDate) },
+      email: { label: 'Email Address', value: session.email || '—' },
+      phone: { label: 'Registered Phone Number', value: session.phone || '—' },
+      address: { label: 'Mailing Address', value: session.mailingAddress || '—' },
+    };
+
+    Object.keys(rows).forEach(function (key) {
+      var override = detailOverride(content, key);
+      setText('#label-info-' + key, (override && override.label) || rows[key].label);
+      setText('#info-' + key, (override && override.value) || rows[key].value);
+    });
+
+    setText('#support-email', content.support.email || session.email || '—');
   }
 
   function renderSidebar(session) {
@@ -309,14 +589,17 @@
       'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + defs.inner + '</svg>';
   }
 
-  function renderQuickActions() {
+  function renderQuickActions(session) {
     var grid = $('#qa-grid');
     if (!grid) return;
-    grid.innerHTML = QUICK_ACTIONS.map(function (a) {
-      return '<button class="qa-item" type="button" data-action="' + a.action + '" data-target="' + a.target + '">' +
-        '<span class="qa-icon">' + iconSvg(a.icon, 18) + '</span>' +
-        '<span><span class="qa-label">' + escapeHtml(a.label) + '</span>' +
-        '<span class="qa-sub">' + escapeHtml(a.sub) + '</span></span>' +
+    var content = contentOf(session);
+    var actions = (content.quickActions && content.quickActions.length) ? content.quickActions : QUICK_ACTIONS;
+    grid.innerHTML = actions.map(function (a) {
+      var target = a.target || '#overview';
+      return '<button class="qa-item" type="button" data-action="scroll" data-target="' + escapeHtml(target) + '">' +
+        '<span class="qa-icon">' + iconSvg(a.icon || 'arrow-left-right', 18) + '</span>' +
+        '<span><span class="qa-label">' + escapeHtml(a.label || '') + '</span>' +
+        '<span class="qa-sub">' + escapeHtml(a.sub || '') + '</span></span>' +
         '</button>';
     }).join('');
   }
@@ -330,15 +613,18 @@
     { icon: 'credit-card', title: 'Manage Cards', sub: 'Card controls and replacement are not enabled in this prototype.', badge: 'Coming soon', tone: 'soon' },
   ];
 
-  function renderServices() {
+  function renderServices(session) {
     var grid = $('#service-grid');
     if (!grid) return;
-    grid.innerHTML = SERVICES.map(function (s) {
+    var content = contentOf(session);
+    var services = (content.services && content.services.length) ? content.services : SERVICES;
+    grid.innerHTML = services.map(function (s) {
+      var tone = s.tone || 'soon';
       return '<div class="service-item">' +
-        '<span class="service-icon">' + iconSvg(s.icon, 18) + '</span>' +
-        '<div><p class="service-title">' + escapeHtml(s.title) + '</p>' +
-        '<p class="service-sub">' + escapeHtml(s.sub) + '</p>' +
-        '<span class="service-badge service-badge--' + s.tone + '">' + escapeHtml(s.badge) + '</span>' +
+        '<span class="service-icon">' + iconSvg(s.icon || 'wallet', 18) + '</span>' +
+        '<div><p class="service-title">' + escapeHtml(s.title || '') + '</p>' +
+        '<p class="service-sub">' + escapeHtml(s.sub || '') + '</p>' +
+        '<span class="service-badge service-badge--' + escapeHtml(tone) + '">' + escapeHtml(s.badge || '') + '</span>' +
         '</div></div>';
     }).join('');
   }
@@ -346,45 +632,66 @@
   function renderProducts(session) {
     var grid = $('#product-grid');
     if (!grid) return;
-    var cards = [{
-      name: session.accountTypeLabel,
-      type: 'Your account',
-      desc: 'This is the account you opened. Your account details are on the Account Information panel.',
-      badge: 'Active',
-      tone: 'on',
-      cta: null,
-    }];
-    if (session.accountType === 'checking') {
+    var content = contentOf(session);
+    var cards;
+
+    if (content.products && content.products.length) {
+      cards = content.products.map(function (p) {
+        return {
+          name: p.name || '',
+          type: p.type || 'Deposit account',
+          desc: p.desc || '',
+          badge: p.badge || '',
+          tone: p.tone || 'soon',
+          cta: (p.ctaLabel && p.ctaHref) ? { label: p.ctaLabel, href: p.ctaHref } : null,
+        };
+      });
+    } else {
+      cards = [{
+        name: session.accountTypeLabel,
+        type: 'Your account',
+        desc: 'This is the account you opened. Your account details are on the Account Information panel.',
+        badge: 'Active',
+        tone: 'on',
+        cta: null,
+      }];
+      if (session.accountType === 'checking') {
+        cards.push({
+          name: 'Savings Account', type: 'Deposit account',
+          desc: 'Earn interest on your savings with a linked savings account.',
+          badge: 'Available to open', tone: 'soon',
+          cta: { label: 'Open an Account', href: ACCOUNT_ENTRY },
+        });
+      }
       cards.push({
-        name: 'Savings Account', type: 'Deposit account',
-        desc: 'Earn interest on your savings with a linked savings account.',
+        name: 'Money Market Account', type: 'Deposit account',
+        desc: 'A higher-yield savings option for short-term balances.',
         badge: 'Available to open', tone: 'soon',
         cta: { label: 'Open an Account', href: ACCOUNT_ENTRY },
       });
     }
-    cards.push({
-      name: 'Money Market Account', type: 'Deposit account',
-      desc: 'A higher-yield savings option for short-term balances.',
-      badge: 'Available to open', tone: 'soon',
-      cta: { label: 'Open an Account', href: ACCOUNT_ENTRY },
-    });
 
     grid.innerHTML = cards.map(function (c) {
       return '<article class="product-card' + (c.tone === 'on' ? ' product-card--active' : '') + '">' +
         '<p class="product-type">' + escapeHtml(c.type) + '</p>' +
         '<p class="product-name">' + escapeHtml(c.name) + '</p>' +
         '<p class="product-desc">' + escapeHtml(c.desc) + '</p>' +
-        '<span class="service-badge service-badge--' + c.tone + '">' + escapeHtml(c.badge) + '</span>' +
-        (c.cta ? '<a class="btn btn-outline btn-sm product-cta" href="' + c.cta.href + '">' + escapeHtml(c.cta.label) + '</a>' : '') +
+        '<span class="service-badge service-badge--' + escapeHtml(c.tone) + '">' + escapeHtml(c.badge) + '</span>' +
+        (c.cta ? '<a class="btn btn-outline btn-sm product-cta" href="' + escapeHtml(c.cta.href) + '">' + escapeHtml(c.cta.label) + '</a>' : '') +
         '</article>';
     }).join('');
   }
 
   function renderPayments(session) {
-    var upcoming = session.upcomingPayment;
+    var content = contentOf(session);
+    var payments = content.payments || {};
+    var upcomingCfg = payments.upcoming || {};
+    var upcoming = upcomingCfg.active ? upcomingCfg : session.upcomingPayment;
     var emptyEl = $('#upcoming-empty');
     var detailEl = $('#upcoming-detail');
     var btn = $('#btn-make-payment');
+    var emptyCopy = content.emptyStates.payments || 'No upcoming payments';
+    setText('#empty-payments-upcoming', emptyCopy);
 
     if (!upcoming) {
       if (emptyEl) emptyEl.hidden = false;
@@ -399,9 +706,10 @@
       if (btn) btn.hidden = false;
     }
 
-    var history = session.paymentHistory;
+    var history = (payments.history && payments.history.length) ? payments.history : session.paymentHistory;
     var histEl = $('#payment-history');
     var histEmpty = $('#payment-history-empty');
+    setText('#empty-payments-history', emptyCopy);
     if (!history || !history.length) {
       if (histEl) histEl.innerHTML = '';
       if (histEmpty) histEmpty.hidden = false;
@@ -425,10 +733,12 @@
   };
 
   function renderTransactions(session) {
-    var rows = session.transactions;
+    var content = contentOf(session);
+    var rows = (content.transactions && content.transactions.length) ? content.transactions : session.transactions;
     var emptyEl = $('#transactions-empty');
     var wrap = $('#transactions-table-wrap');
     var body = $('#transactions-body');
+    setText('#empty-transactions', content.emptyStates.transactions);
 
     if (!rows || !rows.length) {
       if (emptyEl) emptyEl.hidden = false;
@@ -458,6 +768,28 @@
   }
 
   function buildActivity(session) {
+    var content = contentOf(session);
+
+    if (content.activity && content.activity.length) {
+      return content.activity.map(function (e) {
+        return {
+          icon: e.icon || 'clock',
+          title: e.title || '',
+          meta: e.meta || formatDateTime(e.at),
+        };
+      });
+    }
+
+    if (session.activity && session.activity.length) {
+      return session.activity.map(function (e) {
+        return {
+          icon: e.icon || 'clock',
+          title: e.title || '',
+          meta: e.meta || formatDateTime(e.at),
+        };
+      });
+    }
+
     var events = [];
     if (session.submittedAt) {
       events.push({
@@ -492,10 +824,12 @@
   }
 
   function renderActivity(session) {
+    var content = contentOf(session);
     var events = buildActivity(session);
     var list = $('#activity-list');
     var emptyEl = $('#activity-empty');
     if (!list) return;
+    setText('#empty-activity', content.emptyStates.activity);
 
     if (!events.length) {
       list.innerHTML = '';
@@ -512,35 +846,158 @@
   }
 
   function renderNotifications(session) {
-    var events = buildActivity(session).slice(0, 4);
+    var content = contentOf(session);
     var list = $('#notification-list');
     var emptyEl = $('#notification-empty');
     var badge = $('#notification-badge');
     if (!list) return;
 
-    if (!events.length) {
+    var items;
+    if (content.notifications && content.notifications.length) {
+      items = content.notifications.map(function (n) {
+        return {
+          icon: 'bell',
+          title: n.title || '',
+          meta: n.body || formatDateTime(n.at),
+        };
+      });
+    } else {
+      items = buildActivity(session).slice(0, 4).map(function (e) {
+        return { icon: e.icon, title: e.title, meta: e.meta };
+      });
+    }
+
+    if (!items.length) {
       list.innerHTML = '';
       if (emptyEl) emptyEl.hidden = false;
       if (badge) badge.hidden = true;
       return;
     }
     if (emptyEl) emptyEl.hidden = true;
-    if (badge) { badge.hidden = false; badge.textContent = String(events.length); }
-    list.innerHTML = events.map(function (e) {
+    if (badge) { badge.hidden = false; badge.textContent = String(items.length); }
+    list.innerHTML = items.map(function (e) {
       return '<li class="dropdown-notification">' +
-        '<span class="ic-wrap">' + iconSvg(e.icon, 16) + '</span>' +
+        '<span class="ic-wrap">' + iconSvg(e.icon || 'bell', 16) + '</span>' +
         '<div><p>' + escapeHtml(e.title) + '</p><time>' + escapeHtml(e.meta) + '</time></div>' +
         '</li>';
     }).join('');
   }
 
   function renderSecurity(session) {
+    var content = contentOf(session);
+    setText('#security-title', content.security.title || (content.sectionTitles && content.sectionTitles.security) || 'Security Settings');
     setText('#security-lastsignin', session.firstSignIn ? 'First sign-in just now' : formatDateTime(session.lastSignIn));
+
+    var body = $('#security-body');
+    if (body) {
+      if (content.security.body) {
+        body.hidden = false;
+        setText('#security-body', content.security.body);
+      } else {
+        body.hidden = true;
+      }
+    }
+
+    var items = $all('#security .security-item');
+    (content.security.items || []).forEach(function (item, index) {
+      var el = items[index];
+      if (!el || !item) return;
+      var titleEl = el.querySelector('.security-title');
+      var valueEl = el.querySelector('.security-sub');
+      if (item.label && titleEl) titleEl.textContent = item.label;
+      if (item.value && valueEl) valueEl.textContent = item.value;
+    });
+  }
+
+  /* --------------------------------------------------- shared CMS layers -- */
+  function applySectionTitles(session) {
+    var titles = contentOf(session).sectionTitles || {};
+    var map = {
+      quickActions: '#qa-title',
+      products: '#products-title',
+      services: '#services-title',
+      payments: '#payments-title',
+      transactions: '#transactions-title',
+      activity: '#activity-title',
+      details: '#details-title',
+    };
+    Object.keys(map).forEach(function (key) {
+      if (titles[key]) setText(map[key], titles[key]);
+    });
+  }
+
+  function applyEmptyStates(session) {
+    var empty = contentOf(session).emptyStates || {};
+    if (empty.payments) {
+      setText('#empty-payments-upcoming', empty.payments);
+      setText('#empty-payments-history', empty.payments);
+    }
+    if (empty.transactions) setText('#empty-transactions', empty.transactions);
+    if (empty.activity) setText('#empty-activity', empty.activity);
+  }
+
+  function renderSupport(session) {
+    var content = contentOf(session);
+    var support = content.support || {};
+    setText('#support-title', support.title || (content.sectionTitles && content.sectionTitles.support) || 'Help & Support');
+    if (support.phone) setText('#support-phone', support.phone);
+    if (support.hours) setText('#support-hours', support.hours);
+    setText('#support-email', support.email || session.email || '—');
+
+    var body = $('#support-body');
+    if (body) {
+      if (support.body) {
+        body.hidden = false;
+        setText('#support-body', support.body);
+      } else {
+        body.hidden = true;
+      }
+    }
+
+    var links = support.links || [];
+    var linkEls = $all('#support .panel-link');
+    links.forEach(function (link, index) {
+      var el = linkEls[index];
+      if (!el || !link) return;
+      if (link.href) el.setAttribute('href', link.href);
+      if (link.label) setText('#support-link-help', link.label);
+    });
+  }
+
+  function renderNotices(session) {
+    var wrap = $('#dash-notices');
+    if (!wrap) return;
+    var notices = (contentOf(session).notices || []).filter(function (notice) {
+      return notice && notice.active !== false && notice.text;
+    });
+
+    if (!notices.length) {
+      wrap.hidden = true;
+      wrap.innerHTML = '';
+      return;
+    }
+
+    wrap.hidden = false;
+    wrap.innerHTML = notices.map(function (notice) {
+      var tone = notice.tone || 'info';
+      var link = (notice.linkLabel && notice.linkHref)
+        ? ' <a href="' + escapeHtml(notice.linkHref) + '">' + escapeHtml(notice.linkLabel) + '</a>'
+        : '';
+      return '<div class="dash-notice dash-notice--' + escapeHtml(tone) + '">' +
+        escapeHtml(notice.text) + link + '</div>';
+    }).join('');
   }
 
   /* ---------------------------------------------------------- credentials -- */
   function renderCredentials(session) {
+    var content = contentOf(session);
+    var panel = content.credentialsPanel || {};
+    setText('#credentials-title', panel.title || (content.sectionTitles && content.sectionTitles.credentials) || 'Login Credentials');
+    setText('#credentials-label-login', panel.loginIdLabel || 'Login ID / Application Reference');
+    setText('#credentials-label-password', panel.passwordLabel || 'Login Password');
+    setText('#credentials-note-text', panel.note || 'Keep your login credentials safe. Never share your password with anyone.');
     setText('#credentials-login-id', session.applicationReference || '—');
+
     var hasPassword = !!session.passwordHash;
     var pwdEl = $('#credentials-password');
     if (pwdEl) {
@@ -575,23 +1032,54 @@
           alert('Passwords do not match.');
           return;
         }
-        // Update the hashed password in the session draft (client-side prototype only)
-        try {
-          var raw = sessionStorage.getItem(DRAFT_KEY);
-          if (raw) {
-            var draft = JSON.parse(raw);
-            if (draft && draft.meta) {
-              draft.meta.passwordHash = await sha256Hex(newPwd);
-              sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
-              currentSession.passwordHash = draft.meta.passwordHash;
-              renderCredentials(currentSession);
-              alert('Password changed successfully.');
-            }
-          }
-        } catch (e) {
-          alert('Could not change password.');
+
+        var saved = await savePasswordRemotely(newPwd);
+        if (saved) {
+          currentSession.passwordHash = 'stored';
+          renderCredentials(currentSession);
+          alert('Password changed successfully.');
+          return;
         }
+
+        if (isLocalHost()) {
+          try {
+            var raw = sessionStorage.getItem(DRAFT_KEY);
+            if (raw) {
+              var draft = JSON.parse(raw);
+              if (draft && draft.meta) {
+                draft.meta.passwordHash = await sha256Hex(newPwd);
+                sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+                currentSession.passwordHash = draft.meta.passwordHash;
+                renderCredentials(currentSession);
+                alert('Password changed locally. Sign in with the new password on this site.');
+                return;
+              }
+            }
+          } catch (e) { /* fall through */ }
+        }
+
+        alert('Could not change your password. Please try again.');
       });
+    }
+  }
+
+  function isLocalHost() {
+    return /localhost|127\.0\.0\.1/.test(window.location.hostname);
+  }
+
+  async function savePasswordRemotely(password) {
+    try {
+      var res = await fetch('/.netlify/functions/change-password', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newPassword: password }),
+      });
+      if (!res.ok) return false;
+      var body = await res.json().catch(function () { return null; });
+      return !!(body && body.ok);
+    } catch (e) {
+      return false;
     }
   }
 
@@ -606,9 +1094,11 @@
 
   function applyNumberVisibility() {
     var session = currentSession;
-    setText('#account-number-value', numberVisible ? session.prototypeId : session.maskedId);
-    setText('#info-number', numberVisible ? session.prototypeId : session.maskedId);
-    setText('#sb-account', numberVisible ? session.prototypeId : session.maskedId);
+    var numberOverride = detailOverride(contentOf(session), 'number');
+    var shownValue = numberVisible ? session.prototypeId : session.maskedId;
+    setText('#account-number-value', shownValue);
+    setText('#info-number', (numberOverride && numberOverride.value) || shownValue);
+    setText('#sb-account', shownValue);
     var btn = $('#btn-toggle-number');
     if (btn) btn.setAttribute('aria-pressed', numberVisible ? 'true' : 'false');
     setText('#toggle-number-label', numberVisible ? 'Hide account number' : 'View account number');
@@ -828,14 +1318,31 @@
     removeKey(DRAFT_KEY);
     removeKey(LEGACY_KEY);
     try { sessionStorage.clear(); } catch (e) { /* ignore */ }
-    window.location.assign('/');
+
+    var done = false;
+    function finish() {
+      if (done) return;
+      done = true;
+      window.location.assign('/');
+    }
+
+    try {
+      fetch('/.netlify/functions/logout', {
+        method: 'POST',
+        credentials: 'same-origin',
+        keepalive: true,
+      }).catch(function () { /* ignore */ }).then(finish);
+      setTimeout(finish, 600);
+    } catch (e) {
+      finish();
+    }
   }
 
   function setupSignOut() {
     ['#signout-btn', '#mobile-signout', '#dropdown-signout'].forEach(function (sel) {
       var btn = $(sel);
       if (btn) btn.addEventListener('click', function () {
-        if (window.confirm('Sign out of Citi online banking? Your prototype application data will be cleared from this browser.')) {
+        if (window.confirm('Sign out of Citi online banking?')) {
           signOut();
         }
       });
@@ -880,18 +1387,55 @@
     }
   }
 
-  function start() {
-    var draft = readJson(DRAFT_KEY);
+  async function loadRemoteSession() {
+    try {
+      var res = await fetch('/.netlify/functions/session', {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: { Accept: 'application/json' },
+      });
+      if (!res.ok) return { ok: false, status: res.status };
+      var body = await res.json().catch(function () { return null; });
+      if (body && body.ok && body.application) return { ok: true, data: body };
+      return { ok: false, status: 500 };
+    } catch (e) {
+      return null;
+    }
+  }
 
-    // Gate: a session exists only when the customer has an approved,
-    // submitted application in this browser session. No identifier is ever
-    // read from the URL.
-    if (!draft || !draft.meta || draft.meta.submitted !== true) {
-      window.location.replace(ACCOUNT_ENTRY);
+  async function loadPublicContent() {
+    try {
+      var res = await fetch('/.netlify/functions/content', {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+      });
+      if (!res.ok) return null;
+      var body = await res.json().catch(function () { return null; });
+      return (body && body.ok) ? body.defaults : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async function start() {
+    var draft = readJson(DRAFT_KEY);
+    var hasDraft = !!(draft && draft.meta && draft.meta.submitted === true);
+    var remote = await loadRemoteSession();
+
+    if (remote && remote.ok) {
+      currentSession = buildSessionFromApi(remote.data);
+    } else if (isLocalHost() && hasDraft) {
+      // Local preview fallback: the functions runtime is not running.
+      currentSession = buildSession(draft);
+      currentSession.content = resolveContent(null, await loadPublicContent());
+    } else {
+      // No signed cookie: send the visitor to the sign-on page. An identifier
+      // is never read from the URL, and one browser session can never render
+      // another customer's data.
+      window.location.replace('/login/');
       return;
     }
 
-    currentSession = buildSession(draft);
     persistSession(currentSession);
 
     var loading = $('#dash-loading');
@@ -899,21 +1443,25 @@
     if (loading) loading.hidden = true;
     if (shell) shell.hidden = false;
 
+    applySectionTitles(currentSession);
+    applyEmptyStates(currentSession);
     renderIdentity(currentSession);
     renderWelcome(currentSession);
     renderHero(currentSession);
     renderStats(currentSession);
     renderDetails(currentSession);
     renderSidebar(currentSession);
-    renderQuickActions();
-    renderServices();
+    renderQuickActions(currentSession);
+    renderServices(currentSession);
     renderProducts(currentSession);
     renderPayments(currentSession);
     renderTransactions(currentSession);
     renderActivity(currentSession);
     renderNotifications(currentSession);
     renderSecurity(currentSession);
+    renderSupport(currentSession);
     renderCredentials(currentSession);
+    renderNotices(currentSession);
     applyNumberVisibility();
 
     setupNav();
@@ -988,9 +1536,15 @@
     if (retry) retry.addEventListener('click', function () { window.location.reload(); });
   }
 
+  function boot() {
+    start().catch(function () {
+      showError('We could not load your account. Please try again.');
+    });
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', start);
+    document.addEventListener('DOMContentLoaded', boot);
   } else {
-    start();
+    boot();
   }
 })();

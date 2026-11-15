@@ -1,0 +1,186 @@
+/* ============================================================================
+ * Citi Online Banking — sign-on page
+ * Reuses the Citi mirror palette from the account application and dashboard.
+ * ========================================================================== */
+
+:root {
+  --citi-blue: #056dae;
+  --citi-blue-dark: #045a8f;
+  --citi-blue-tint: #eaf3fa;
+  --bank-navy: #003b70;
+  --bank-navy-deep: #001f42;
+  --success: #0a7d33;
+  --error: #b00020;
+  --ink: #333333;
+  --ink-soft: #4a5560;
+  --muted: #5b6770;
+  --line: #d7dce1;
+  --surface: #f7f9fb;
+  --white: #ffffff;
+  --radius-card: 14px;
+  --radius-btn: 8px;
+  --shadow-lg: 0 14px 40px rgba(0, 31, 66, .18);
+}
+
+* { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body.login-body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #eef5fa 0%, var(--surface) 55%, #e9eff5 100%);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, p { margin: 0; }
+ul { margin: 0; padding-left: 18px; }
+a { color: var(--citi-blue); }
+a:hover { text-decoration: underline; }
+
+.skip-link {
+  position: absolute; left: 12px; top: -60px; z-index: 200;
+  background: var(--bank-navy); color: #fff; padding: 10px 16px;
+  border-radius: 0 0 var(--radius-btn) var(--radius-btn); font-weight: 600;
+  transition: top .15s ease;
+}
+.skip-link:focus { top: 0; text-decoration: none; }
+
+/* ----------------------------------------------------------------- header -- */
+.site-header {
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+.header-inner {
+  max-width: 1120px; margin: 0 auto; padding: 12px 24px;
+  display: flex; align-items: center; gap: 18px;
+}
+.brand { display: inline-flex; align-items: center; }
+.brand-logo { width: 64px; height: 64px; display: block; }
+.fdic-badge { height: 26px; width: auto; display: block; }
+.header-right {
+  margin-left: auto; display: flex; align-items: center; gap: 18px;
+  font-size: 13px; color: var(--ink-soft);
+}
+.secure-note { display: inline-flex; align-items: center; gap: 6px; }
+.secure-note svg { color: var(--success); }
+.back-home { font-weight: 600; }
+
+/* ------------------------------------------------------------------- main -- */
+.login-main {
+  max-width: 1060px; margin: 0 auto; padding: 48px 24px 56px;
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  gap: 32px; align-items: start;
+}
+
+.login-card {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card);
+  padding: 34px 34px 30px; box-shadow: var(--shadow-lg);
+}
+.eyebrow {
+  font-size: 12px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--citi-blue);
+}
+.login-card h1 {
+  margin-top: 8px; font-size: 28px; line-height: 1.2;
+  color: var(--bank-navy-deep); letter-spacing: -.01em;
+}
+.login-sub { margin-top: 10px; color: var(--muted); font-size: 14px; max-width: 46ch; }
+
+.field { margin-top: 20px; }
+.field label {
+  display: block; font-size: 13px; font-weight: 600; color: var(--ink);
+  margin-bottom: 6px;
+}
+.field input {
+  width: 100%; padding: 11px 13px; border: 1px solid var(--line);
+  border-radius: var(--radius-btn); font: inherit; color: var(--ink);
+  background: #fff; transition: border-color .15s ease, box-shadow .15s ease;
+}
+.field input:focus {
+  outline: none; border-color: var(--citi-blue);
+  box-shadow: 0 0 0 3px rgba(5, 109, 174, .14);
+}
+.field input::placeholder { color: #9aa6b1; }
+.password-wrap { position: relative; }
+.password-wrap input { padding-right: 68px; }
+.password-toggle {
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+  border: 0; background: transparent; color: var(--citi-blue);
+  font-size: 12.5px; font-weight: 700; padding: 8px 10px; cursor: pointer;
+  border-radius: 6px;
+}
+.password-toggle:hover { background: var(--citi-blue-tint); }
+
+.form-error {
+  margin-top: 16px; padding: 10px 12px; border-radius: 8px;
+  background: #fdf1f2; border: 1px solid #f0c3c8; color: var(--error);
+  font-size: 13.5px;
+}
+
+.btn-primary {
+  width: 100%; margin-top: 22px; padding: 12px 18px;
+  border: 0; border-radius: var(--radius-btn);
+  background: var(--citi-blue); color: #fff;
+  font: inherit; font-weight: 700; letter-spacing: .01em; cursor: pointer;
+  transition: background-color .15s ease, opacity .15s ease;
+}
+.btn-primary:hover { background: var(--citi-blue-dark); }
+.btn-primary:disabled { opacity: .65; cursor: progress; }
+
+.login-links {
+  margin-top: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  font-size: 13.5px; color: var(--muted);
+}
+.login-help {
+  margin-top: 18px; padding-top: 16px; border-top: 1px solid #e3e7eb;
+  font-size: 12.5px; color: var(--muted);
+}
+.login-help strong { color: var(--ink); }
+
+/* ------------------------------------------------------------------ aside -- */
+.login-aside {
+  background: linear-gradient(160deg, var(--bank-navy) 0%, var(--bank-navy-deep) 100%);
+  color: #eaf1f8; border-radius: var(--radius-card); padding: 30px;
+  box-shadow: var(--shadow-lg);
+}
+.aside-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px; border-radius: 12px;
+  background: rgba(255, 255, 255, .12); color: #fff; margin-bottom: 16px;
+}
+.login-aside h2 { font-size: 19px; line-height: 1.25; color: #fff; }
+.login-aside p { margin-top: 10px; font-size: 13.5px; color: #cfe0ee; }
+.login-aside ul { margin-top: 14px; font-size: 13px; color: #cfe0ee; }
+.login-aside li { margin-top: 8px; }
+
+/* ----------------------------------------------------------------- footer -- */
+.login-footer {
+  max-width: 1060px; margin: 0 auto; padding: 0 24px 40px;
+  font-size: 11.5px; color: var(--muted);
+}
+.login-footer p + p { margin-top: 8px; max-width: 92ch; }
+
+/* --------------------------------------------------------------- responsive -- */
+@media (max-width: 860px) {
+  .login-main { grid-template-columns: minmax(0, 1fr); padding-top: 32px; }
+  .login-aside { order: 2; }
+}
+
+@media (max-width: 560px) {
+  .header-inner { padding: 10px 16px; gap: 12px; }
+  .brand-logo { width: 48px; height: 48px; }
+  .fdic-badge { display: none; }
+  .secure-note { display: none; }
+  .header-right { gap: 10px; }
+  .login-main { padding: 24px 16px 40px; gap: 20px; }
+  .login-card { padding: 24px 20px; }
+  .login-card h1 { font-size: 23px; }
+  .login-footer { padding: 0 16px 32px; }
+}

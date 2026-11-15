@@ -21,6 +21,7 @@
   'use strict';
 
   var FORM = '/account-application/?mode=';
+  var SIGNON = '/login/';
   var LOCAL_HOME = '/';
 
   // Real banking hosts that must never be navigated to from the mirror.
@@ -100,9 +101,9 @@
         // Only navigation links — never the sign-on panel's own submit button.
         if (!el || el.tagName !== 'A') return null;
         if (el.closest && el.closest('#logInForm')) return null;
-        // With a sign-on panel on the page, scroll to it; otherwise the local
-        // account application is the only account flow the mirror offers.
-        return signOnTarget() ? '#logInForm' : FORM + 'register';
+        // With a sign-on panel on the page, scroll to it; otherwise open the
+        // local sign-on page. The real bank login is never used.
+        return signOnTarget() ? '#logInForm' : SIGNON;
       }
       return FORM + mode;
     }
@@ -133,7 +134,7 @@
           if (input) setTimeout(function () { input.focus(); }, 350);
         } catch (e) { /* ignore */ }
       } else {
-        window.location.assign(FORM + 'register');
+        window.location.assign(SIGNON);
       }
       return;
     }

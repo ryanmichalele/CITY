@@ -35,6 +35,19 @@ application.dashboard  →  dashboardDefaults.content  →  built-in copy
 
 So a field left empty on a user falls back to the shared default.
 
+### Demonstration account
+
+A seeded account is available to show the flow end to end:
+
+- Sign-on page: `/login/`
+- Application reference / login ID: `APP-20261112-DEMO01`
+- Studio path: **Applications → Jordan A Demo — APP-20261112-DEMO01 → Dashboard content**
+- The demo document has its own hero copy, notice banner, quick actions and
+  support email, so it demonstrates per-user overrides without affecting any
+  other applicant.
+- The password itself is shared separately and is stored only as a scrypt hash
+  in `credentials.passwordHash`.
+
 ## Local development
 
 ```bash

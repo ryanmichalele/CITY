@@ -24,6 +24,38 @@ node server.js
 
 Change port: `PORT=8080 node server.js` or `node server.js 8080`.
 
+## Sanity CMS, accounts, and the dashboard
+
+The static mirror is paired with a Sanity-backed account flow deployed on
+Netlify:
+
+- **Studio:** https://citi-ca-bank.sanity.studio/
+- **Sign on:** `/login/`
+- **Application form:** `/account-application/`
+- **Dashboard:** `/dashboard/`
+- **API (Netlify Functions):** `/.netlify/functions/{applications,session,login,logout,change-password,content}`
+
+Every submitted application becomes one Sanity `application` document with its
+own **Dashboard content** tab. Reads and writes happen only inside Netlify
+Functions using server-side tokens; the browser never talks to Sanity directly.
+
+Content resolution per field:
+
+```
+application.dashboard  →  dashboardDefaults.content  →  built-in dashboard copy
+```
+
+A seeded demonstration account (`APP-20261112-DEMO01`) exercises this model.
+Passwords are stored only as scrypt hashes, and only the last four SSN digits
+are stored. See `studio/README.md` for the content model and Studio layout.
+
+Run the full stack locally with Netlify Dev:
+
+```bash
+netlify dev
+# http://localhost:8888
+```
+
 ## What was mirrored (from `https://www.citi.com/`)
 
 - **SSR HTML** — `index.html` (fully rendered, original, not minified, not rewritten)
