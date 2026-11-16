@@ -167,6 +167,10 @@
   <title>Online Banking, Mortgages, Personal Loans, Investing | Citi.com</title>
   <base id="baseHrefId" href="/">
 
+  <!-- Must stay first: blocks the inherited Citi analytics/ad/fingerprint calls
+       (Ensighten, Google Tag, Adobe DTM, ThreatMetrix, Qualtrics, LiveRamp...). -->
+  <script src="/tracker-block.js"></script>
+
   <script src="/cbol-hp-static-assets/assets/js/banner.min.54ddf126.js"></script>
   <link rel="preload" as="image" href="/cbol-hp-static-assets/assets/img/Citi-futuristic-angles-bg-compressed.jpg" fetchpriority="high">
 
@@ -176,12 +180,8 @@
   <link rel="preload" href="/cbol-hp-static-assets/cds-assets/fonts/interstate/Interstate-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="/cbol-hp-static-assets/cds-assets/fonts/interstate/Interstate-Light.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 
-  <link rel="dns-prefetch" href="//www.googletagmanager.com">
-  <link rel="dns-prefetch" href="//nexus.ensighten.com/citi/na_prod/Bootstrap.js">
   <link rel="dns-prefetch" href="//online.citi.com/">
 
-  <link rel="preconnect" href="//www.googletagmanager.com" crossorigin>
-  <link rel="preconnect" href="//nexus.ensighten.com/citi/na_prod/Bootstrap.js" crossorigin>
   <link rel="preconnect" href="//online.citi.com/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">

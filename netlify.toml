@@ -25,3 +25,11 @@
   for = "/cbol-hp-static-assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Short-lived cache for the tracker blocker: it is loaded synchronously before
+# every other script, so keep it out of the network path without pinning a
+# stale copy in browsers for a year.
+[[headers]]
+  for = "/tracker-block.js"
+  [headers.values]
+    Cache-Control = "public, max-age=600"
